@@ -1,7 +1,9 @@
-export default function Home() {
+import HomeClientPage from "@/components/HomeClientPage";
+
+export default async function Auth() {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+    <>
+      <HomeClientPage />
+    </>
   );
 }
