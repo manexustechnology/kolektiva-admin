@@ -3,15 +3,19 @@
 import { useSession } from "next-auth/react";
 import PanelLayout from "../layout/PanelLayout";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const DashboardClientPage = () => {
   const { data } = useSession();
   const router = useRouter();
 
-  if (!data) {
-    router.push('/');
-    return (<></>);
-  }
+  useEffect(() => {
+    if (!data) {
+      router.push('/');
+    }
+  }, [router, data]);
+
+  if (!data) return <></>
 
   return (
     <div className="max-w-screen">
