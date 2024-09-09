@@ -5,7 +5,7 @@ import PanelLayout from "../layout/PanelLayout";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-const DashboardClientPage = () => {
+const PropertyListingRequestPage = () => {
   const { data } = useSession();
   const router = useRouter();
 
@@ -19,9 +19,9 @@ const DashboardClientPage = () => {
 
   return (
     <div className="max-w-screen">
-      <PanelLayout pageTitle="Dashboard" />
+      <PanelLayout pageTitle="Property Listing Request" />
     </div>
   )
 }
 
-export default DashboardClientPage;
+export default PropertyListingRequestPage;

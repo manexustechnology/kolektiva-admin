@@ -25,7 +25,7 @@ const SignInClientPage: React.FC = () => {
   }, []);
 
   if (data) {
-    router.push('/dashboard');
+    router.push('/property-listing-request');
     return (<></>);
   }
 
@@ -36,7 +36,7 @@ const SignInClientPage: React.FC = () => {
           {providers &&
             Object.values(providers).map((provider) => (
               <div className='w-full' key={provider.name}>
-                <Button colorScheme='primary' w='full' type='submit' onClick={() => signIn(provider.id, { callbackUrl: '/dashboard' })}>Sign in with {provider.name}</Button>
+                <Button colorScheme='primary' w='full' type='submit' onClick={() => signIn(provider.id, { callbackUrl: '/property-listing-request' })}>Sign in with {provider.name}</Button>
               </div>
             ))}
         </div>

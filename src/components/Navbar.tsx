@@ -3,7 +3,7 @@
 import { cn } from "@/utils/cn";
 import { Avatar, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { CaretDown, CaretRight } from "@phosphor-icons/react/dist/ssr";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 interface NavbarProps {
   pageTitle?: string;
@@ -13,6 +13,7 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ pageTitle = '', withSidebarButton = true, isSidebarShowed, setSidebarShow }) => {
+  const { data: session } = useSession();
   const handleSidebarButtonClick = () => {
     if (setSidebarShow) setSidebarShow(true);
   }
@@ -50,8 +51,8 @@ const Navbar: React.FC<NavbarProps> = ({ pageTitle = '', withSidebarButton = tru
         <MenuButton as={Button} variant="white">
           <div className="flex gap-4 items-center">
             <div className="hidden md:flex md:flex-col items-end">
-              <p className="text-md font-bold">Administrator</p>
-              <p className="text-sm">superuser</p>
+              <p className="text-md font-bold">{session?.user?.name || ''}</p>
+              <p className="text-sm">{session?.user?.email || ''}</p>
             </div>
             <Avatar size="md" src="https://bit.ly/ryan-florence" cursor="pointer" />
           </div>
