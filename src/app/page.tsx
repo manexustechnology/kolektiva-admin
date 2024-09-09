@@ -11,7 +11,7 @@ export default function Home() {
   useEffect(() => {
     if (router) {
       if (data) {
-        router.push('/dashboard');
+        router.push('/property-listing-request');
       } else {
         router.push('/signin');
       }
