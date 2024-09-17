@@ -8,7 +8,8 @@ import { Table, Dropdown, Menu, Button } from "antd";
 import { TablePaginationConfig } from "antd/es/table/interface";
 import FilterBar from "./FilterBar";
 import { IMarketFilter } from "@/types/filter";
-import { CaretDown } from "@phosphor-icons/react/dist/ssr";
+import { CaretDown, PencilSimpleLine } from "@phosphor-icons/react/dist/ssr";
+import { Eye } from "@phosphor-icons/react";
 
 const ListedPropertyPage: React.FC = () => {
   const { data } = useSession();
@@ -212,36 +213,218 @@ const ListedPropertyPage: React.FC = () => {
     },
   ];
 
+  const handleMenuClick = (key: string, record: any) => {
+    if (key === "view") {
+      router.push(`/linkA/${record.id}`);
+    } else if (key === "edit") {
+      router.push(`/linkB/${record.id}`);
+    }
+  };
+
   const columns = [
     {
       title: "Date",
       dataIndex: "date",
       key: "date",
+      render: (text: string, record: any) => (
+        <Dropdown
+          overlay={
+            <Menu
+              onClick={({ key }) => handleMenuClick(key, record)}
+              style={{ width: "140px" }}
+            >
+              <Menu.Item key="view">
+                <div className="flex flex-row items-center">
+                  <Eye weight="fill" style={{ marginRight: "8px" }} />
+                  View
+                </div>
+              </Menu.Item>
+              <Menu.Item key="edit">
+                <div className="flex flex-row items-center">
+                  <PencilSimpleLine
+                    weight="fill"
+                    style={{ marginRight: "8px" }}
+                  />
+                  Edit
+                </div>
+              </Menu.Item>
+            </Menu>
+          }
+          trigger={["click"]}
+        >
+          <a href="#">{text}</a>
+        </Dropdown>
+      ),
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      render: (text: string, record: any) => (
+        <Dropdown
+          overlay={
+            <Menu
+              onClick={({ key }) => handleMenuClick(key, record)}
+              style={{ width: "140px" }}
+            >
+              <Menu.Item key="view">
+                <div className="flex flex-row items-center">
+                  <Eye weight="fill" style={{ marginRight: "8px" }} />
+                  View
+                </div>
+              </Menu.Item>
+              <Menu.Item key="edit">
+                <div className="flex flex-row items-center">
+                  <PencilSimpleLine
+                    weight="fill"
+                    style={{ marginRight: "8px" }}
+                  />
+                  Edit
+                </div>
+              </Menu.Item>
+            </Menu>
+          }
+          trigger={["click"]}
+        >
+          <a href="#">{text}</a>
+        </Dropdown>
+      ),
     },
     {
       title: "Property Address",
       dataIndex: "address",
       key: "address",
+      render: (text: string, record: any) => (
+        <Dropdown
+          overlay={
+            <Menu
+              onClick={({ key }) => handleMenuClick(key, record)}
+              style={{ width: "140px" }}
+            >
+              <Menu.Item key="view">
+                <div className="flex flex-row items-center">
+                  <Eye weight="fill" style={{ marginRight: "8px" }} />
+                  View
+                </div>
+              </Menu.Item>
+              <Menu.Item key="edit">
+                <div className="flex flex-row items-center">
+                  <PencilSimpleLine
+                    weight="fill"
+                    style={{ marginRight: "8px" }}
+                  />
+                  Edit
+                </div>
+              </Menu.Item>
+            </Menu>
+          }
+          trigger={["click"]}
+        >
+          <a href="#">{text}</a>
+        </Dropdown>
+      ),
     },
     {
       title: "State",
       dataIndex: "state",
       key: "state",
+      render: (text: string, record: any) => (
+        <Dropdown
+          overlay={
+            <Menu
+              onClick={({ key }) => handleMenuClick(key, record)}
+              style={{ width: "140px" }}
+            >
+              <Menu.Item key="view">
+                <div className="flex flex-row items-center">
+                  <Eye weight="fill" style={{ marginRight: "8px" }} />
+                  View
+                </div>
+              </Menu.Item>
+              <Menu.Item key="edit">
+                <div className="flex flex-row items-center">
+                  <PencilSimpleLine
+                    weight="fill"
+                    style={{ marginRight: "8px" }}
+                  />
+                  Edit
+                </div>
+              </Menu.Item>
+            </Menu>
+          }
+          trigger={["click"]}
+        >
+          <a href="#">{text}</a>
+        </Dropdown>
+      ),
     },
     {
       title: "Property Type",
       dataIndex: "type",
       key: "type",
+      render: (text: string, record: any) => (
+        <Dropdown
+          overlay={
+            <Menu
+              onClick={({ key }) => handleMenuClick(key, record)}
+              style={{ width: "140px" }}
+            >
+              <Menu.Item key="view">
+                <div className="flex flex-row items-center">
+                  <Eye weight="fill" style={{ marginRight: "8px" }} />
+                  View
+                </div>
+              </Menu.Item>
+              <Menu.Item key="edit">
+                <div className="flex flex-row items-center">
+                  <PencilSimpleLine
+                    weight="fill"
+                    style={{ marginRight: "8px" }}
+                  />
+                  Edit
+                </div>
+              </Menu.Item>
+            </Menu>
+          }
+          trigger={["click"]}
+        >
+          <a href="#">{text}</a>
+        </Dropdown>
+      ),
     },
     {
       title: "Phase",
       dataIndex: "phase",
       key: "phase",
+      render: (text: string, record: any) => (
+        <Dropdown
+          overlay={
+            <Menu
+              onClick={({ key }) => handleMenuClick(key, record)}
+              style={{ width: "140px" }}
+            >
+              <Menu.Item key="view">
+                <div className="flex flex-row items-center">
+                  <Eye weight="fill" style={{ marginRight: "8px" }} />
+                  View
+                </div>
+              </Menu.Item>
+              <Menu.Item key="edit">
+                <div className="flex flex-row items-center">
+                  <PencilSimpleLine
+                    weight="fill"
+                    style={{ marginRight: "8px" }}
+                  />
+                  Edit
+                </div>
+              </Menu.Item>
+            </Menu>
+          }
+          trigger={["click"]}
+        >
+          <a href="#">{text}</a>
+        </Dropdown>
+      ),
     },
   ];
 
