@@ -3,6 +3,7 @@
 import { useState } from "react";
 import {
   CaretDown,
+  Funnel,
   MagnifyingGlass,
   Plus,
   SortDescending,
@@ -37,15 +38,18 @@ const FilterBar: React.FC<FilterBarProps> = ({
   };
 
   return (
-    <Box pt={4} pb={4} position="relative" bg="white" borderRadius="md">
-      <div className="flex flex-row">
-        {/* Search Bar */}
+    <div className="flex flex-col md:flex-row pt-4 pb-4 relative bg-white rounded-md mb-[40px]">
+      {/* Search Bar */}
+      <div className="items-center justify-center">
         <Flex
+          marginTop={1}
+          marginBottom={1}
           direction="row"
           alignItems="center"
+          justifyContent="center"
           p="12px 16px"
           gap="6px"
-          w="189px"
+          w="100%"
           h="40px"
           bg="#F4F4F5"
           borderRadius="full"
@@ -71,36 +75,38 @@ const FilterBar: React.FC<FilterBarProps> = ({
             _placeholder={{ color: "#71717A" }}
           />
         </Flex>
-        <Select
-          id="propertytype"
-          placeholder="Property Type"
-          backgroundColor="#F4F4F5"
-          _hover={{
-            backgroundColor: "#CCFBF1",
-          }}
-          _focus={{
-            backgroundColor: "#CCFBF1",
-          }}
-          icon={<CaretDown weight="fill" />}
-          width="200px"
-          rounded={100}
-          marginRight={5}
-          onChange={(e) => handleFilterChange("propertyType", e.target.value)}
+      </div>
+      <div>
+        <Flex marginTop={1} marginBottom={1} direction="row" className=" gap-4">
+          <Button
+            display="flex"
+            flexDirection="row"
+            justifyContent="center"
+            alignItems="center"
+            p="12px 16px"
+            gap="6px"
+            m="0 auto"
+            h="40px"
+            bg="#CCFBF1"
+            borderRadius="100px"
+            _focus={{ boxShadow: "none" }}
+            _hover={{ bg: "teal.500" }}
+            position="relative"
+            overflow="hidden"
+            color="#0F766E"
+          >
+            <Funnel weight="fill" size={16} color="#0F766E" />
+            Filter
+          </Button>
+        </Flex>
+      </div>
+      <div>
+        <Flex
+          marginTop={1}
+          marginBottom={1}
+          direction="row"
+          className="md:absolute md:right-0 gap-4"
         >
-          {propertyTypes.map((type, index) => (
-            <option
-              key={index}
-              value={type}
-              selected={
-                type.toLowerCase() === filters.propertyType.toLowerCase()
-              }
-            >
-              {type}
-            </option>
-          ))}
-        </Select>
-
-        <Flex direction="row" className="absolute right-0 gap-4">
           <Button
             display="flex"
             flexDirection="row"
@@ -114,6 +120,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
             bg="#0D9488"
             borderRadius="100px"
             _focus={{ boxShadow: "none" }}
+            _hover={{ bg: "teal.400" }}
             position="relative"
             overflow="hidden"
           >
@@ -122,9 +129,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
           </Button>
         </Flex>
       </div>
-
-      {/*Slider */}
-    </Box>
+    </div>
   );
 };
 

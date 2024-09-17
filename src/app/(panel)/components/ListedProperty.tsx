@@ -504,10 +504,10 @@ const ListedPropertyPage: React.FC = () => {
   return (
     <div className="">
       <PanelLayout pageTitle="Listed Property">
-        <div className="w-full p-8">
+        <div className="w-full p-8 gap-6">
           <FilterBar {...filterBarProps} />
           <Table
-            className="overflow-x-auto w-full"
+            className="overflow-x-auto "
             dataSource={dataSource.slice(
               (current - 1) * pageSize,
               current * pageSize
@@ -516,7 +516,7 @@ const ListedPropertyPage: React.FC = () => {
             columns={columns}
           />
 
-          <div className="flex justify-between mt-4">
+          <div className="flex flex-col md:flex-row justify-between mt-4 gap-4">
             <div className="flex flex-row items-center gap-1">
               <p className="text-sm font-normal text-zinc-500">Show</p>
               <Dropdown overlay={pageMenu} trigger={["click"]}>
