@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -11,14 +11,13 @@ export default function Home() {
   useEffect(() => {
     if (router) {
       if (data) {
-        router.push('/property-listing-request');
+        console.log("Redirecting to /listed-property");
+        router.push("/listed-property");
       } else {
-        router.push('/signin');
+        router.push("/signin");
       }
     }
   }, [router]);
 
-  return (
-    <></>
-  );
+  return <></>;
 }

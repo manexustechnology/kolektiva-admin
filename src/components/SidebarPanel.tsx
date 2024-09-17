@@ -1,15 +1,17 @@
 "use client";
 
 import { Sidebar, SidebarItem } from "./Sidebar";
-import { ClockCounterClockwise, FileText } from "@phosphor-icons/react";
 import Link from "next/link";
 import {
+  ClockCounterClockwise,
   Bell,
   GearSix,
   PresentationChart,
   User,
   Users,
+  Buildings,
 } from "@phosphor-icons/react/dist/ssr";
+import { useSession } from "next-auth/react";
 
 interface SidebarPanel {
   isShowed?: boolean;
@@ -17,6 +19,8 @@ interface SidebarPanel {
 }
 
 const SidebarPanel: React.FC<SidebarPanel> = ({ isShowed, onShow }) => {
+  const { data: session } = useSession();
+
   return (
     <Sidebar isShowed={isShowed} onShow={onShow}>
       <div className="flex flex-col h-full">
@@ -29,6 +33,15 @@ const SidebarPanel: React.FC<SidebarPanel> = ({ isShowed, onShow }) => {
             />
           </Link>
           <Link href="/">
+            <SidebarItem
+              text="Property Management"
+              icon={<Buildings size={20} weight="fill" />}
+            />
+          </Link>
+          <Link href="/">
+            <SidebarItem text="Property Listing Request" />
+          </Link>
+          <Link href="/listed-property">
             <SidebarItem text="Listed Property" />
           </Link>
           <div className="flex flex-col items-start px-2.5 gap-2.5 w-full h-px">
@@ -62,7 +75,7 @@ const SidebarPanel: React.FC<SidebarPanel> = ({ isShowed, onShow }) => {
             <div className="w-full h-px bg-zinc-200 flex-none order-0 self-stretch flex-grow-0"></div>
           </div>
           <SidebarItem
-            text="Super Admin"
+            text={session?.user?.email || ""}
             icon={<User size={20} weight="fill" />}
           />
         </div>
