@@ -6,16 +6,15 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Table, Dropdown, Menu, GetProp, TablePaginationConfig, TableProps } from "antd";
 import { IMarketFilter } from "@/types/filter";
-import { CaretDown, MagnifyingGlass, PencilSimpleLine, Plus } from "@phosphor-icons/react/dist/ssr";
+import { CaretDown, Funnel, MagnifyingGlass, PencilSimpleLine, Plus } from "@phosphor-icons/react/dist/ssr";
 import { Eye } from "@phosphor-icons/react";
 import { SorterResult } from "antd/es/table/interface";
-import { Box, Input, Select } from "@chakra-ui/react";
+import { Box, Input, Button } from "@chakra-ui/react";
 import { generateJWTBearerForAdmin } from "@/utils/jwt";
 import { fetchGetAdminListedProperty } from "@/fetch/admin/listed-propery.fetch";
 import dayjs from "dayjs";
+import { AdminListedPropertyResponse } from "@/types/admin/listed-property";
 import { useQuery } from "@tanstack/react-query";
-import { fetchGetAdminPropertyListingRequest } from "@/fetch/admin/property-listing-request.fetch";
-import { AdminPropertyListingRequestResponse } from "@/types/admin/property-listing-request";
 
 interface TableParams {
   pagination?: TablePaginationConfig;
@@ -24,15 +23,7 @@ interface TableParams {
   filters?: Parameters<GetProp<TableProps, 'onChange'>>[1];
 }
 
-const statusFilterOptions: string[] = [
-  'pending',
-  'oncheck',
-  'approved',
-  'rejected',
-  'archived',
-];
-
-const PropertyListingRequestPage: React.FC = () => {
+const ListedPropertyPage: React.FC = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -49,10 +40,6 @@ const PropertyListingRequestPage: React.FC = () => {
       pageSizeOptions: ["10", "20", "30", "50", "100"],
       position: ['bottomCenter'],
     },
-  });
-  const [searchFilter, setSearchFilter] = useState({
-    search: "",
-    status: "",
   });
 
   interface FilterBarProps {
@@ -142,142 +129,6 @@ const PropertyListingRequestPage: React.FC = () => {
       ),
     },
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-      render: (text: string, record: any) => (
-        <Dropdown
-          overlay={
-            <Menu
-              onClick={({ key }) => handleMenuClick(key, record)}
-              style={{ width: "140px" }}
-            >
-              <Menu.Item key="view">
-                <div className="flex flex-row items-center">
-                  <Eye weight="fill" style={{ marginRight: "8px" }} />
-                  View
-                </div>
-              </Menu.Item>
-              <Menu.Item key="edit">
-                <div className="flex flex-row items-center">
-                  <PencilSimpleLine
-                    weight="fill"
-                    style={{ marginRight: "8px" }}
-                  />
-                  Edit
-                </div>
-              </Menu.Item>
-            </Menu>
-          }
-          trigger={["click"]}
-        >
-          <a href="#">{text}</a>
-        </Dropdown>
-      ),
-    },
-    {
-      title: "Phone",
-      dataIndex: "phone",
-      key: "phone",
-      render: (text: string, record: any) => (
-        <Dropdown
-          overlay={
-            <Menu
-              onClick={({ key }) => handleMenuClick(key, record)}
-              style={{ width: "140px" }}
-            >
-              <Menu.Item key="view">
-                <div className="flex flex-row items-center">
-                  <Eye weight="fill" style={{ marginRight: "8px" }} />
-                  View
-                </div>
-              </Menu.Item>
-              <Menu.Item key="edit">
-                <div className="flex flex-row items-center">
-                  <PencilSimpleLine
-                    weight="fill"
-                    style={{ marginRight: "8px" }}
-                  />
-                  Edit
-                </div>
-              </Menu.Item>
-            </Menu>
-          }
-          trigger={["click"]}
-        >
-          <a href="#">{text}</a>
-        </Dropdown>
-      ),
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-      render: (text: string, record: any) => (
-        <Dropdown
-          overlay={
-            <Menu
-              onClick={({ key }) => handleMenuClick(key, record)}
-              style={{ width: "140px" }}
-            >
-              <Menu.Item key="view">
-                <div className="flex flex-row items-center">
-                  <Eye weight="fill" style={{ marginRight: "8px" }} />
-                  View
-                </div>
-              </Menu.Item>
-              <Menu.Item key="edit">
-                <div className="flex flex-row items-center">
-                  <PencilSimpleLine
-                    weight="fill"
-                    style={{ marginRight: "8px" }}
-                  />
-                  Edit
-                </div>
-              </Menu.Item>
-            </Menu>
-          }
-          trigger={["click"]}
-        >
-          <a href="#">{text}</a>
-        </Dropdown>
-      ),
-    },
-    {
-      title: "Price Estimation",
-      dataIndex: "priceEstimation",
-      key: "priceEstimation",
-      render: (text: string, record: any) => (
-        <Dropdown
-          overlay={
-            <Menu
-              onClick={({ key }) => handleMenuClick(key, record)}
-              style={{ width: "140px" }}
-            >
-              <Menu.Item key="view">
-                <div className="flex flex-row items-center">
-                  <Eye weight="fill" style={{ marginRight: "8px" }} />
-                  View
-                </div>
-              </Menu.Item>
-              <Menu.Item key="edit">
-                <div className="flex flex-row items-center">
-                  <PencilSimpleLine
-                    weight="fill"
-                    style={{ marginRight: "8px" }}
-                  />
-                  Edit
-                </div>
-              </Menu.Item>
-            </Menu>
-          }
-          trigger={["click"]}
-        >
-          <a href="#">USD ${Number(text).toLocaleString()}</a>
-        </Dropdown>
-      ),
-    },
-    {
       title: "Property Address",
       dataIndex: "address",
       key: "address",
@@ -311,6 +162,108 @@ const PropertyListingRequestPage: React.FC = () => {
         </Dropdown>
       ),
     },
+    {
+      title: "State",
+      dataIndex: "state",
+      key: "state",
+      render: (text: string, record: any) => (
+        <Dropdown
+          overlay={
+            <Menu
+              onClick={({ key }) => handleMenuClick(key, record)}
+              style={{ width: "140px" }}
+            >
+              <Menu.Item key="view">
+                <div className="flex flex-row items-center">
+                  <Eye weight="fill" style={{ marginRight: "8px" }} />
+                  View
+                </div>
+              </Menu.Item>
+              <Menu.Item key="edit">
+                <div className="flex flex-row items-center">
+                  <PencilSimpleLine
+                    weight="fill"
+                    style={{ marginRight: "8px" }}
+                  />
+                  Edit
+                </div>
+              </Menu.Item>
+            </Menu>
+          }
+          trigger={["click"]}
+        >
+          <a href="#">{text}</a>
+        </Dropdown>
+      ),
+    },
+    {
+      title: "Property Type",
+      dataIndex: "type",
+      key: "type",
+      render: (text: string, record: any) => (
+        <Dropdown
+          overlay={
+            <Menu
+              onClick={({ key }) => handleMenuClick(key, record)}
+              style={{ width: "140px" }}
+            >
+              <Menu.Item key="view">
+                <div className="flex flex-row items-center">
+                  <Eye weight="fill" style={{ marginRight: "8px" }} />
+                  View
+                </div>
+              </Menu.Item>
+              <Menu.Item key="edit">
+                <div className="flex flex-row items-center">
+                  <PencilSimpleLine
+                    weight="fill"
+                    style={{ marginRight: "8px" }}
+                  />
+                  Edit
+                </div>
+              </Menu.Item>
+            </Menu>
+          }
+          trigger={["click"]}
+        >
+          <a href="#">{text}</a>
+        </Dropdown>
+      ),
+    },
+    {
+      title: "Phase",
+      dataIndex: ['isUpcoming', 'isAftermarket'],
+      key: "phase",
+      render: (text: string, record: any) => (
+        <Dropdown
+          overlay={
+            <Menu
+              onClick={({ key }) => handleMenuClick(key, record)}
+              style={{ width: "140px" }}
+            >
+              <Menu.Item key="view">
+                <div className="flex flex-row items-center">
+                  <Eye weight="fill" style={{ marginRight: "8px" }} />
+                  View
+                </div>
+              </Menu.Item>
+              <Menu.Item key="edit">
+                <div className="flex flex-row items-center">
+                  <PencilSimpleLine
+                    weight="fill"
+                    style={{ marginRight: "8px" }}
+                  />
+                  Edit
+                </div>
+              </Menu.Item>
+            </Menu>
+          }
+          trigger={["click"]}
+        >
+          <a href="#">{record.isUpcoming ? 'Upcoming' : record.isAftermarket ? 'Aftermarket' : 'Initial Offering'}</a>
+        </Dropdown>
+      ),
+    },
   ];
 
   useEffect(() => {
@@ -326,19 +279,19 @@ const PropertyListingRequestPage: React.FC = () => {
         router.push("/signin");
       }
     }
-  }, [router, session, domLoaded]);
+  }, [router, session, domLoaded, firstCheckLoggedIn]);
 
-  const fetchData = async (): Promise<AdminPropertyListingRequestResponse[] | undefined> => {
+  const searchParams = useSearchParams();
+
+  const fetchData = async (): Promise<AdminListedPropertyResponse[] | undefined> => {
     if (domLoaded) {
-      let result: AdminPropertyListingRequestResponse[] = [];
+      let result: AdminListedPropertyResponse[] = [];
       setLoading(true);
       try {
         const token = await generateJWTBearerForAdmin(session?.user?.email || '');
-        const response = await fetchGetAdminPropertyListingRequest({
+        const response = await fetchGetAdminListedProperty({
           page: Number(tableParams.pagination?.current),
           perPage: Number(tableParams.pagination?.pageSize),
-          search: searchFilter.search,
-          status: searchFilter.status,
         }, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -362,8 +315,8 @@ const PropertyListingRequestPage: React.FC = () => {
     }
   };
 
-  const { data: dataSource } = useQuery<AdminPropertyListingRequestResponse[] | undefined>({
-    queryKey: ['listedProperty', tableParams.pagination?.current, tableParams.pagination?.pageSize, tableParams?.sortOrder, tableParams?.sortField, domLoaded, session, searchFilter.search, searchFilter.status],
+  const { data: dataSource } = useQuery<AdminListedPropertyResponse[] | undefined>({
+    queryKey: ['listedProperty', tableParams.pagination?.current, tableParams.pagination?.pageSize, tableParams?.sortOrder, tableParams?.sortField, domLoaded, session],
     queryFn: fetchData,
   });
 
@@ -382,16 +335,16 @@ const PropertyListingRequestPage: React.FC = () => {
     <div className="">
       <PanelLayout>
         <div className="w-full p-8 gap-6">
-          <h2 className="text-2xl font-bold">Property Listing Request</h2>
+          <h2 className="text-2xl font-bold">Listed Property</h2>
           <div className="flex flex-col md:flex-row pt-4 pb-4 relative bg-white rounded-md gap-2">
             <div className="items-center justify-center">
-              <div className="flex my-1 justify-center items-center px-3 py-4 w-full h-10 bg-[#F4F4F5] rounded-full gap-2">
+              <div className="flex my-1 justify-center items-center px-3 py-4 w-full h-10 bg-[#F4F4F5] rounded-full">
                 {/* Magnifying Glass Icon */}
                 <Box as={MagnifyingGlass} size="16px" color="#3F3F46" />
+
                 {/* Input Field */}
                 <Input
                   id="searchquery"
-                  type="text"
                   placeholder="Search"
                   variant="unstyled"
                   fontSize="sm"
@@ -399,44 +352,54 @@ const PropertyListingRequestPage: React.FC = () => {
                   color="#71717A"
                   border="none"
                   _placeholder={{ color: "#71717A" }}
-                  _focus={{ border: "none" }}
-                  onChange={(e) => setSearchFilter((prev) => ({
-                    ...prev,
-                    search: e.target.value,
-                  }))}
                 />
               </div>
             </div>
             <div className="flex mt-1 mb-1 gap-4">
-              <Select
-                id="filterStatus"
-                placeholder="All Property Type"
-                backgroundColor="#F4F4F5"
-                _hover={{
-                  backgroundColor: "#CCFBF1",
-                }}
-                _focus={{
-                  backgroundColor: "#CCFBF1",
-                }}
-                icon={<CaretDown weight="fill" />}
-                width="200px"
-                rounded={100}
-                marginRight={5}
-                value={searchFilter.status}
-                className="!py-0"
-                onChange={(e) => setSearchFilter((prev) => ({
-                  ...prev,
-                  status: e.target.value,
-                }))}
+              <Button
+                display="flex"
+                flexDirection="row"
+                justifyContent="center"
+                alignItems="center"
+                p="12px 16px"
+                gap="6px"
+                m="0 auto"
+                h="40px"
+                bg="#CCFBF1"
+                borderRadius="100px"
+                _focus={{ boxShadow: "none" }}
+                _hover={{ bg: "teal.500" }}
+                position="relative"
+                overflow="hidden"
+                color="#0F766E"
               >
-                {statusFilterOptions.map((value) => {
-                  return (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  );
-                })}
-              </Select>
+                <Funnel weight="fill" size={16} color="#0F766E" />
+                Filter
+              </Button>
+            </div>
+            <div>
+              <div className="flex mx-1 md:absolute md:right-0 gap-4">
+                <Button
+                  display="flex"
+                  flexDirection="row"
+                  justifyContent="center"
+                  alignItems="center"
+                  p="12px 16px"
+                  gap="6px"
+                  m="0 auto"
+                  w="171px"
+                  h="40px"
+                  bg="#0D9488"
+                  borderRadius="100px"
+                  _focus={{ boxShadow: "none" }}
+                  _hover={{ bg: "teal.400" }}
+                  position="relative"
+                  overflow="hidden"
+                >
+                  <Plus size={16} color="#FFFFFF" />
+                  List Property
+                </Button>
+              </div>
             </div>
           </div>
           <Table
@@ -454,4 +417,4 @@ const PropertyListingRequestPage: React.FC = () => {
   );
 };
 
-export default PropertyListingRequestPage;
+export default ListedPropertyPage;

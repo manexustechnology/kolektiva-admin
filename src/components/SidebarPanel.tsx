@@ -10,8 +10,9 @@ import {
   User,
   Users,
   Buildings,
+  SignOut,
 } from "@phosphor-icons/react/dist/ssr";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 interface SidebarPanel {
   isShowed?: boolean;
@@ -38,7 +39,7 @@ const SidebarPanel: React.FC<SidebarPanel> = ({ isShowed, onShow }) => {
               icon={<Buildings size={20} weight="fill" />}
             />
           </Link>
-          <Link href="/">
+          <Link href="/property-listing-request">
             <SidebarItem text="Property Listing Request" />
           </Link>
           <Link href="/listed-property">
@@ -77,6 +78,11 @@ const SidebarPanel: React.FC<SidebarPanel> = ({ isShowed, onShow }) => {
           <SidebarItem
             text={session?.user?.email || ""}
             icon={<User size={20} weight="fill" />}
+          />
+          <SidebarItem
+            text="Logout"
+            icon={<SignOut size={20} weight="fill" />}
+            onClick={() => signOut()}
           />
         </div>
       </div>
