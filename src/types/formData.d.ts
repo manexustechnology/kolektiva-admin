@@ -16,11 +16,8 @@ export interface FormData {
   propertyDetails_propertySummary_landArea: number;
   propertyDetails_propertySummary_buildingArea: number;
   propertyDetails_propertySummary_priceEstimation: number;
-  propertyDetails_propertyImages_primary: string;
-  propertyDetails_propertyImages_exterior1: string;
-  propertyDetails_propertyImages_exterior2: string;
-  propertyDetails_propertyImages_interior1: string;
-  propertyDetails_propertyImages_interior2: string;
+  propertyDetails_propertyImages_primary: File | null;
+  propertyDetails_propertyImages_others: File[];
   propertyDetails_propertyDetails_planToSell: string;
   propertyDetails_propertyDetails_propertyType: string;
   propertyDetails_propertyDetails_ownershipStatus: string;
@@ -52,7 +49,7 @@ export interface FormData {
 
   documents_documents: string[];
 
-  markets_markets: string[];
+  markets_markets: string;
 
   errmsg: boolean;
 }

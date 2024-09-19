@@ -2,6 +2,10 @@
 
 import React, { useState } from "react";
 import { FormData } from "@/types/formData";
+import dynamic from "next/dynamic";
+import "react-quill/dist/quill.snow.css";
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 interface FormPart4Props {
   formData: FormData;
@@ -9,6 +13,13 @@ interface FormPart4Props {
 }
 
 const FormPart4: React.FC<FormPart4Props> = ({ formData, setFormData }) => {
+  const handleDescriptionChange = (value: string) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      markets: value,
+    }));
+  };
+
   return (
     <>
       {/* ProgressBar */}
@@ -42,6 +53,20 @@ const FormPart4: React.FC<FormPart4Props> = ({ formData, setFormData }) => {
           <div className="w-full h-[6px] bg-teal-600 rounded-full" />
           <div className="text-base font-medium text-zinc-700">4. Markets</div>
         </div>
+      </div>
+
+      {/* Makets */}
+      <div className="flex flex-col items-start p-4 gap-5 w-full bg-white shadow-md rounded-lg md:h-[240px]">
+        {/* Title */}
+        <p className="text-lg font-medium text-zinc-500">Markets</p>
+        {/* Divider */}
+        <div className="w-full h-px bg-zinc-200"></div>
+
+        <ReactQuill
+          className="w-full"
+          value={formData.markets_markets}
+          onChange={handleDescriptionChange}
+        />
       </div>
     </>
   );

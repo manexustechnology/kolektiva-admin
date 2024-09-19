@@ -34,11 +34,9 @@ const PropertyListingForm: React.FC = () => {
     propertyDetails_propertySummary_landArea: 0,
     propertyDetails_propertySummary_buildingArea: 0,
     propertyDetails_propertySummary_priceEstimation: 0,
-    propertyDetails_propertyImages_primary: "",
-    propertyDetails_propertyImages_exterior1: "",
-    propertyDetails_propertyImages_exterior2: "",
-    propertyDetails_propertyImages_interior1: "",
-    propertyDetails_propertyImages_interior2: "",
+    propertyDetails_propertyImages_primary: null,
+    propertyDetails_propertyImages_others: [],
+
     propertyDetails_propertyDetails_planToSell: "",
     propertyDetails_propertyDetails_propertyType: "",
     propertyDetails_propertyDetails_ownershipStatus: "",
@@ -70,12 +68,13 @@ const PropertyListingForm: React.FC = () => {
 
     documents_documents: [],
 
-    markets_markets: [],
+    markets_markets: "",
 
     errmsg: false,
   });
 
   const nextStep = () => {
+    console.log(formData);
     setStep(step + 1);
     // const allFieldsFilled =
     //   formData.name &&
