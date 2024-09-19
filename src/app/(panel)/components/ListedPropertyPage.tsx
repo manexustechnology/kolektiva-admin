@@ -4,9 +4,22 @@ import { useSession } from "next-auth/react";
 import PanelLayout from "../layout/PanelLayout";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Table, Dropdown, Menu, GetProp, TablePaginationConfig, TableProps } from "antd";
+import {
+  Table,
+  Dropdown,
+  Menu,
+  GetProp,
+  TablePaginationConfig,
+  TableProps,
+} from "antd";
 import { IMarketFilter } from "@/types/filter";
-import { CaretDown, Funnel, MagnifyingGlass, PencilSimpleLine, Plus } from "@phosphor-icons/react/dist/ssr";
+import {
+  CaretDown,
+  Funnel,
+  MagnifyingGlass,
+  PencilSimpleLine,
+  Plus,
+} from "@phosphor-icons/react/dist/ssr";
 import { Eye } from "@phosphor-icons/react";
 import { SorterResult } from "antd/es/table/interface";
 import { Box, Input, Button } from "@chakra-ui/react";
@@ -18,9 +31,9 @@ import { useQuery } from "@tanstack/react-query";
 
 interface TableParams {
   pagination?: TablePaginationConfig;
-  sortField?: SorterResult<any>['field'];
-  sortOrder?: SorterResult<any>['order'];
-  filters?: Parameters<GetProp<TableProps, 'onChange'>>[1];
+  sortField?: SorterResult<any>["field"];
+  sortOrder?: SorterResult<any>["order"];
+  filters?: Parameters<GetProp<TableProps, "onChange">>[1];
 }
 
 const ListedPropertyPage: React.FC = () => {
@@ -38,7 +51,7 @@ const ListedPropertyPage: React.FC = () => {
       showSizeChanger: true,
       showQuickJumper: true,
       pageSizeOptions: ["10", "20", "30", "50", "100"],
-      position: ['bottomCenter'],
+      position: ["bottomCenter"],
     },
   });
 
@@ -53,9 +66,9 @@ const ListedPropertyPage: React.FC = () => {
 
   const handleMenuClick = (key: string, record: any) => {
     if (key === "view") {
-      router.push(`/linkA/${record.id}`);
+      router.push(`/view/${record.id}`);
     } else if (key === "edit") {
-      router.push(`/linkB/${record.id}`);
+      router.push(`/edit/${record.id}`);
     }
   };
 
@@ -90,7 +103,7 @@ const ListedPropertyPage: React.FC = () => {
           }
           trigger={["click"]}
         >
-          <a href="#">{dayjs(text).format('YYYY-MM-DD HH:mm')} WIB</a>
+          <a href="#">{dayjs(text).format("YYYY-MM-DD HH:mm")} WIB</a>
         </Dropdown>
       ),
     },
@@ -232,7 +245,7 @@ const ListedPropertyPage: React.FC = () => {
     },
     {
       title: "Phase",
-      dataIndex: ['isUpcoming', 'isAftermarket'],
+      dataIndex: ["isUpcoming", "isAftermarket"],
       key: "phase",
       render: (text: string, record: any) => (
         <Dropdown
@@ -260,7 +273,13 @@ const ListedPropertyPage: React.FC = () => {
           }
           trigger={["click"]}
         >
-          <a href="#">{record.isUpcoming ? 'Upcoming' : record.isAftermarket ? 'Aftermarket' : 'Initial Offering'}</a>
+          <a href="#">
+            {record.isUpcoming
+              ? "Upcoming"
+              : record.isAftermarket
+              ? "Aftermarket"
+              : "Initial Offering"}
+          </a>
         </Dropdown>
       ),
     },
@@ -283,20 +302,27 @@ const ListedPropertyPage: React.FC = () => {
 
   const searchParams = useSearchParams();
 
-  const fetchData = async (): Promise<AdminListedPropertyResponse[] | undefined> => {
+  const fetchData = async (): Promise<
+    AdminListedPropertyResponse[] | undefined
+  > => {
     if (domLoaded) {
       let result: AdminListedPropertyResponse[] = [];
       setLoading(true);
       try {
-        const token = await generateJWTBearerForAdmin(session?.user?.email || '');
-        const response = await fetchGetAdminListedProperty({
-          page: Number(tableParams.pagination?.current),
-          perPage: Number(tableParams.pagination?.pageSize),
-        }, {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const token = await generateJWTBearerForAdmin(
+          session?.user?.email || ""
+        );
+        const response = await fetchGetAdminListedProperty(
+          {
+            page: Number(tableParams.pagination?.current),
+            perPage: Number(tableParams.pagination?.pageSize),
           },
-        });
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (response.status === 200 && response.data?.data?.data) {
           // setDataSource(response.data.data.data);
@@ -315,12 +341,26 @@ const ListedPropertyPage: React.FC = () => {
     }
   };
 
-  const { data: dataSource } = useQuery<AdminListedPropertyResponse[] | undefined>({
-    queryKey: ['listedProperty', tableParams.pagination?.current, tableParams.pagination?.pageSize, tableParams?.sortOrder, tableParams?.sortField, domLoaded, session],
+  const { data: dataSource } = useQuery<
+    AdminListedPropertyResponse[] | undefined
+  >({
+    queryKey: [
+      "listedProperty",
+      tableParams.pagination?.current,
+      tableParams.pagination?.pageSize,
+      tableParams?.sortOrder,
+      tableParams?.sortField,
+      domLoaded,
+      session,
+    ],
     queryFn: fetchData,
   });
 
-  const handleTableChange: TableProps<any>['onChange'] = (pagination, filters, sorter) => {
+  const handleTableChange: TableProps<any>["onChange"] = (
+    pagination,
+    filters,
+    sorter
+  ) => {
     setTableParams({
       pagination,
       filters,
@@ -395,6 +435,9 @@ const ListedPropertyPage: React.FC = () => {
                   _hover={{ bg: "teal.400" }}
                   position="relative"
                   overflow="hidden"
+                  onClick={() => {
+                    router.push("/list-new-property");
+                  }}
                 >
                   <Plus size={16} color="#FFFFFF" />
                   List Property
@@ -404,7 +447,7 @@ const ListedPropertyPage: React.FC = () => {
           </div>
           <Table
             className="overflow-x-auto "
-            rowKey={(record) => record.id || ''}
+            rowKey={(record) => record.id || ""}
             dataSource={dataSource}
             columns={columns}
             pagination={tableParams.pagination}
@@ -412,8 +455,8 @@ const ListedPropertyPage: React.FC = () => {
             onChange={handleTableChange}
           />
         </div>
-      </PanelLayout >
-    </div >
+      </PanelLayout>
+    </div>
   );
 };
 
