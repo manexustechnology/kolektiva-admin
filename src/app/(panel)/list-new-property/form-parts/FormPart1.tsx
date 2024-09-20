@@ -1,11 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { FormData } from "@/types/formData";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
+import { CheckCircle, Trash } from "@phosphor-icons/react/dist/ssr";
+import { Box, Button } from "@chakra-ui/react";
+import { Eye } from "@phosphor-icons/react";
+import MediaShowModal from "../modals/MediaShowModal";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -16,6 +21,7 @@ interface FormPart1Props {
 
 const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
   const isLoading = false;
+  const [showModal, setShowModal] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -102,27 +108,84 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
     });
   };
 
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const image = e.target.files[0];
-
-      setFormData((prevState) => {
-        if (prevState.propertyDetails_propertyImages_primary === null) {
-          return {
-            ...prevState,
-            propertyDetails_propertyImages_primary: image,
-          };
-        } else {
-          return {
-            ...prevState,
-            propertyDetails_propertyImages_others: [
-              ...prevState.propertyDetails_propertyImages_others,
-              image,
-            ],
-          };
-        }
-      });
+      updateFormData(image);
     }
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const image = e.dataTransfer.files[0];
+      updateFormData(image);
+    }
+  };
+
+  const updateFormData = (image: File) => {
+    setFormData((prevState) => {
+      if (prevState.propertyDetails_propertyImages_primary === null) {
+        return {
+          ...prevState,
+          propertyDetails_propertyImages_primary: image,
+        };
+      } else {
+        return {
+          ...prevState,
+          propertyDetails_propertyImages_others: [
+            ...prevState.propertyDetails_propertyImages_others,
+            image,
+          ],
+        };
+      }
+    });
+  };
+
+  const swapImage = (index: number) => {
+    const selectedImage = formData.propertyDetails_propertyImages_others[index];
+    const primaryImage = formData.propertyDetails_propertyImages_primary;
+
+    setFormData((prevData) => {
+      const newOthers: File[] =
+        prevData.propertyDetails_propertyImages_others.filter(
+          (_, i) => i !== index
+        );
+
+      if (primaryImage) {
+        newOthers.push(primaryImage);
+      }
+
+      return {
+        ...prevData,
+        propertyDetails_propertyImages_primary: selectedImage,
+        propertyDetails_propertyImages_others: newOthers,
+      };
+    });
+  };
+
+  const removeImage = (index: number) => {
+    setFormData((prevData) => {
+      const newOthers = prevData.propertyDetails_propertyImages_others.filter(
+        (_, i) => i !== index
+      );
+
+      return {
+        ...prevData,
+        propertyDetails_propertyImages_others: newOthers,
+      };
+    });
+  };
+
+  const removePrimaryImage = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      propertyDetails_propertyImages_primary: null,
+    }));
   };
 
   const handleDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -143,7 +206,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
           );
       return {
         ...prevData,
-        propertyDetails_propertyDetails_propertyIssues: updatedIssues, // Fix this line
+        propertyDetails_propertyDetails_propertyIssues: updatedIssues,
       };
     });
   };
@@ -155,6 +218,13 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
     }));
   };
 
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text;
+    const start = text.slice(0, 6);
+    const end = text.slice(-6);
+    return `${start}...${end}`;
+  };
+
   return (
     <>
       {/* ProgressBar */}
@@ -162,7 +232,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
         {/* 1 */}
         <div className="flex flex-col items-start p-0 gap-2.5 w-1/4 flex-grow">
           <div className="w-full h-[6px] bg-teal-600 rounded-full" />
-          <div className="text-base font-medium text-zinc-700">
+          <div className="text-sm md:text-base font-medium text-zinc-700">
             1. Property Details
           </div>
         </div>
@@ -170,7 +240,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
         {/* 2 */}
         <div className="flex flex-col items-start p-0 gap-2.5 w-1/4 flex-grow">
           <div className="w-full h-[6px] bg-zinc-200 rounded-full" />
-          <div className="text-base font-normal text-zinc-400">
+          <div className="text-sm md:text-base  font-normal text-zinc-400">
             2. Financials
           </div>
         </div>
@@ -178,7 +248,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
         {/* 3 */}
         <div className="flex flex-col items-start p-0 gap-2.5 w-1/4 flex-grow">
           <div className="w-full h-[6px] bg-zinc-200 rounded-full" />
-          <div className="text-base font-normal text-zinc-400">
+          <div className="text-sm md:text-base  font-normal text-zinc-400">
             3. Documents
           </div>
         </div>
@@ -186,7 +256,9 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
         {/* 4 */}
         <div className="flex flex-col items-start p-0 gap-2.5 w-1/4 flex-grow">
           <div className="w-full h-[6px] bg-zinc-200 rounded-full" />
-          <div className="text-base font-normal text-zinc-400">4. Markets</div>
+          <div className="text-sm md:text-base  font-normal text-zinc-400">
+            4. Markets
+          </div>
         </div>
       </div>
 
@@ -713,13 +785,17 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
         <div className="w-full h-px bg-zinc-200"></div>
 
         {/* Uploader */}
-        <div className="flex flex-col justify-center items-center p-8 gap-4 w-[1098px] h-[164px] border border-dashed border-zinc-300 rounded-lg">
-          <div className="flex flex-col items-center p-0 gap-2 w-[430px] h-[44px]">
-            <div className="w-[264px] h-[18px] text-base font-medium text-zinc-700">
-              Upload your image
+        <div
+          className="flex flex-col justify-center items-center p-8 gap-4 w-full md:h-[164px] border border-dashed border-zinc-300 rounded-lg"
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+        >
+          <div className="flex flex-col items-center p-0 gap-2 h-[44px]">
+            <div className="h-[18px] text-base font-medium text-zinc-700">
+              Choose a file or drag & drop it here
             </div>
-            <div className="w-[430px] h-[18px] text-base font-regular text-zinc-500">
-              Drag & drop your image here or click to upload
+            <div className="h-[18px] text-base font-regular text-zinc-500 hidden md:block">
+              png and jpg formats with maximum 1080x720 up to 50MB
             </div>
           </div>
           <input
@@ -735,30 +811,196 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
           >
             Upload
           </label>
+          {formData.errmsg &&
+            formData.propertyDetails_propertyImages_primary === null && (
+              <span className="text-red-500 text-xs">
+                Primary Image is Necessary
+              </span>
+            )}
+          {formData.errmsg &&
+            !(formData.propertyDetails_propertyImages_others.length > 0) && (
+              <span className="text-red-500 text-xs">
+                Atleast 2 images are required in total
+              </span>
+            )}
         </div>
-
-        <div>
-          <h3>Primary Image:</h3>
-          {formData.propertyDetails_propertyImages_primary && (
-            <img
-              src={URL.createObjectURL(
-                formData.propertyDetails_propertyImages_primary
-              )}
-              alt="Primary"
-              className="w-32 h-32 object-cover"
-            />
+        {formData.errmsg &&
+          formData.propertyDetails_propertyImages_primary === null && (
+            <span className="text-red-500 text-xs">
+              Primary Image is Necessary
+            </span>
           )}
-        </div>
-        <div>
-          <h3>Other Images:</h3>
+
+        <div className="grid frid-cols-1 md:grid-cols-2 gap-4 w-full">
+          {formData.propertyDetails_propertyImages_primary && (
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4 gap-3 bg-white shadow-md rounded-md">
+              <div className="flex items-center gap-3">
+                <Image
+                  src={URL.createObjectURL(
+                    formData.propertyDetails_propertyImages_primary
+                  )}
+                  alt="Primary Image"
+                  width={40}
+                  height={40}
+                  style={{ borderRadius: "3px" }}
+                />
+                <span className="hidden md:block text-sm font-medium text-[#3F3F46]">
+                  {truncateText(
+                    formData.propertyDetails_propertyImages_primary.name,
+                    18
+                  )}
+                </span>
+                <CheckCircle weight="fill" color="#0D9488" />
+                <Box
+                  backgroundColor="#F0FDFA"
+                  color="#0D9488"
+                  padding="2px 8px"
+                  borderWidth="1px"
+                  borderRadius="full"
+                  borderColor="#0D9488"
+                  fontSize="xs"
+                  zIndex={10}
+                >
+                  Primary
+                </Box>
+              </div>
+              <span className="md:hidden text-sm font-medium text-[#3F3F46]">
+                {truncateText(
+                  formData.propertyDetails_propertyImages_primary.name,
+                  18
+                )}
+              </span>
+
+              <div className="md:ml-auto flex md:items-end gap-1">
+                <Button
+                  leftIcon={<Eye weight="fill" />}
+                  height="40px"
+                  padding="12px 16px"
+                  bg="#F4F4F5"
+                  boxShadow=""
+                  borderRadius="full"
+                  color="#3F3F46"
+                  fontSize="14px"
+                  fontWeight="500"
+                  _focus={{ bg: "teal.200" }}
+                  _hover={{ bg: "teal.200" }}
+                  onClick={() => {
+                    setShowModal(true);
+                  }}
+                >
+                  View
+                </Button>
+
+                <Button
+                  height="40px"
+                  padding="12px 16px"
+                  bg="#F4F4F5"
+                  boxShadow=""
+                  borderRadius="full"
+                  color="#3F3F46"
+                  fontSize="14px"
+                  fontWeight="500"
+                  _focus={{ bg: "teal.200" }}
+                  _hover={{ bg: "teal.200" }}
+                  onClick={() => {
+                    removePrimaryImage();
+                  }}
+                >
+                  <Trash weight="fill" />
+                </Button>
+
+                <MediaShowModal
+                  isOpen={showModal}
+                  image={formData.propertyDetails_propertyImages_primary}
+                  onClose={() => setShowModal(false)}
+                />
+              </div>
+            </div>
+          )}
+
           {formData.propertyDetails_propertyImages_others.map(
             (image, index) => (
-              <img
-                key={index}
-                src={URL.createObjectURL(image)}
-                alt={`Other ${index + 1}`}
-                className="w-32 h-32 object-cover"
-              />
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4 gap-3 bg-white shadow-md rounded-md">
+                <div className="flex items-center gap-3">
+                  {" "}
+                  <Image
+                    key={index}
+                    src={URL.createObjectURL(image)}
+                    alt="Other Image"
+                    width={40}
+                    height={40}
+                    style={{ borderRadius: "3px" }}
+                  />
+                  <span className="hidden md:block text-sm font-medium text-[#3F3F46]">
+                    {truncateText(image.name, 18)}
+                  </span>
+                  <CheckCircle weight="fill" color="#0D9488" />
+                </div>
+
+                <span className="md:hidden text-sm font-medium text-[#3F3F46]">
+                  {truncateText(image.name, 18)}
+                </span>
+
+                <div className="md:ml-auto flex md:items-end gap-1 flex-col md:flex-row">
+                  <Button
+                    height="40px"
+                    padding="12px 16px"
+                    bg="#F4F4F5"
+                    boxShadow=""
+                    borderRadius="full"
+                    color="#3F3F46"
+                    fontSize="14px"
+                    fontWeight="500"
+                    _focus={{ bg: "teal.200" }}
+                    _hover={{ bg: "teal.200" }}
+                    onClick={() => swapImage(index)}
+                  >
+                    Set as Primary
+                  </Button>
+                  <div className="flex justify-center gap-1">
+                    <Button
+                      leftIcon={<Eye weight="fill" />}
+                      height="40px"
+                      padding="12px 16px"
+                      bg="#F4F4F5"
+                      boxShadow=""
+                      borderRadius="full"
+                      color="#3F3F46"
+                      fontSize="14px"
+                      fontWeight="500"
+                      _focus={{ bg: "teal.200" }}
+                      _hover={{ bg: "teal.200" }}
+                      onClick={() => {
+                        setShowModal(true);
+                      }}
+                    >
+                      View
+                    </Button>
+                    <Button
+                      height="40px"
+                      padding="12px 16px"
+                      bg="#F4F4F5"
+                      boxShadow=""
+                      borderRadius="full"
+                      color="#3F3F46"
+                      fontSize="14px"
+                      fontWeight="500"
+                      _focus={{ bg: "teal.200" }}
+                      _hover={{ bg: "teal.200" }}
+                      onClick={() => {
+                        removeImage(index);
+                      }}
+                    >
+                      <Trash weight="fill" />
+                    </Button>
+                  </div>
+                  <MediaShowModal
+                    isOpen={showModal}
+                    image={image}
+                    onClose={() => setShowModal(false)}
+                  />
+                </div>
+              </div>
             )
           )}
         </div>
@@ -1033,15 +1275,15 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                 Furniture <span className="text-zinc-400">*</span>
               </p>
               {formData.errmsg &&
-                formData.propertyDetails_propertyDetails_furniture === "" && (
+                formData.propertyDetails_propertyDetails_furnish === "" && (
                   <span className="text-red-500 text-xs">Select an option</span>
                 )}
             </div>
             <div className="flex flex-col items-start p-0 gap-1 w-full">
               <div className="relative w-full">
                 <select
-                  name="propertyDetails_propertyDetails_furniture"
-                  value={formData.propertyDetails_propertyDetails_furniture}
+                  name="propertyDetails_propertyDetails_furnish"
+                  value={formData.propertyDetails_propertyDetails_furnish}
                   onChange={handleDropdownChange}
                   className="w-full h-[40px] bg-[#F4F4F5] border-none rounded-full pl-4 pr-4"
                   disabled={isLoading}
@@ -1087,8 +1329,8 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
               <div className="flex items-center" key={issue}>
                 <input
                   type="checkbox"
-                  id={issue.toLowerCase().replace(/\s+/g, "")} // Use a unique id for each checkbox
-                  name={issue} // Set the name to the actual issue
+                  id={issue.toLowerCase().replace(/\s+/g, "")}
+                  name={issue}
                   checked={formData.propertyDetails_propertyDetails_propertyIssues.includes(
                     issue
                   )}
@@ -1143,13 +1385,14 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
           <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
             <div className="flex flex-row items-center p-0 gap-0.75">
               <p className="text-sm font-normal text-zinc-700">
-                Property Certificate <span className="text-zinc-400">*</span>
+                Property Certificate
+                {/* <span className="text-zinc-400">*</span> */}
               </p>
-              {formData.errmsg &&
+              {/* {formData.errmsg &&
                 formData.propertyDetails_propertySpecifications_propertyCertificate ===
                   "" && (
                   <span className="text-red-500 text-xs">Required Field</span>
-                )}
+                )} */}
             </div>
             <div className="flex flex-col items-start p-0 gap-1 w-full">
               <input
@@ -1169,9 +1412,10 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
           <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
             <div className="flex flex-row items-center p-0 gap-0.75">
               <p className="text-sm font-normal text-zinc-700">
-                Floors <span className="text-zinc-400">*</span>
+                Floors
+                {/* <span className="text-zinc-400">*</span> */}
               </p>
-              {formData.errmsg &&
+              {/* {formData.errmsg &&
                 formData.propertyDetails_propertySpecifications_floors ===
                   0 && (
                   <span className="text-red-500 text-xs">Required Field</span>
@@ -1180,7 +1424,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                 <span className="text-red-500 text-xs">
                   Enter a number Greater than 0
                 </span>
-              )}
+              )} */}
             </div>
             <div className="flex flex-col items-start p-0 gap-1 w-full">
               <input
@@ -1201,13 +1445,14 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
           <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
             <div className="flex flex-row items-center p-0 gap-0.75">
               <p className="text-sm font-normal text-zinc-700">
-                Water Supply <span className="text-zinc-400">*</span>
+                Water Supply
+                {/* <span className="text-zinc-400">*</span> */}
               </p>
-              {formData.errmsg &&
+              {/* {formData.errmsg &&
                 formData.propertyDetails_propertySpecifications_waterSupply ===
                   "" && (
                   <span className="text-red-500 text-xs">Required Field</span>
-                )}
+                )} */}
             </div>
             <div className="flex flex-col items-start p-0 gap-1 w-full">
               <input
@@ -1227,9 +1472,10 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
           <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
             <div className="flex flex-row items-center p-0 gap-0.75">
               <p className="text-sm font-normal text-zinc-700">
-                Bedrooms <span className="text-zinc-400">*</span>
+                Bedrooms
+                {/* <span className="text-zinc-400">*</span> */}
               </p>
-              {formData.errmsg &&
+              {/* {formData.errmsg &&
                 formData.propertyDetails_propertySpecifications_bedrooms ===
                   0 && (
                   <span className="text-red-500 text-xs">Required Field</span>
@@ -1238,7 +1484,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                 <span className="text-red-500 text-xs">
                   Enter a number Greater than 0
                 </span>
-              )}
+              )} */}
             </div>
             <div className="flex flex-col items-start p-0 gap-1 w-full">
               <input
@@ -1259,9 +1505,10 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
           <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
             <div className="flex flex-row items-center p-0 gap-0.75">
               <p className="text-sm font-normal text-zinc-700">
-                Bathrooms <span className="text-zinc-400">*</span>
+                Bathrooms
+                {/* <span className="text-zinc-400">*</span> */}
               </p>
-              {formData.errmsg &&
+              {/* {formData.errmsg &&
                 formData.propertyDetails_propertySpecifications_bathrooms ===
                   0 && (
                   <span className="text-red-500 text-xs">Required Field</span>
@@ -1271,7 +1518,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                 <span className="text-red-500 text-xs">
                   Enter a number Greater than 0
                 </span>
-              )}
+              )} */}
             </div>
             <div className="flex flex-col items-start p-0 gap-1 w-full">
               <input
@@ -1291,13 +1538,14 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
           <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
             <div className="flex flex-row items-center p-0 gap-0.75">
               <p className="text-sm font-normal text-zinc-700">
-                Garage <span className="text-zinc-400">*</span>
+                Garage
+                {/* <span className="text-zinc-400">*</span> */}
               </p>
-              {formData.errmsg &&
+              {/* {formData.errmsg &&
                 formData.propertyDetails_propertySpecifications_garage ===
                   "" && (
                   <span className="text-red-500 text-xs">Required Field</span>
-                )}
+                )} */}
             </div>
             <div className="flex flex-col items-start p-0 gap-1 w-full">
               <input
@@ -1318,13 +1566,14 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
           <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
             <div className="flex flex-row items-center p-0 gap-0.75">
               <p className="text-sm font-normal text-zinc-700">
-                Garden <span className="text-zinc-400">*</span>
+                Garden
+                {/* <span className="text-zinc-400">*</span> */}
               </p>
-              {formData.errmsg &&
+              {/* {formData.errmsg &&
                 formData.propertyDetails_propertySpecifications_garden ===
                   "" && (
                   <span className="text-red-500 text-xs">Required Field</span>
-                )}
+                )} */}
             </div>
             <div className="flex flex-col items-start p-0 gap-1 w-full">
               <input
@@ -1342,12 +1591,13 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
           <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
             <div className="flex flex-row items-center p-0 gap-0.75">
               <p className="text-sm font-normal text-zinc-700">
-                Swimming Pool <span className="text-zinc-400">*</span>
+                Swimming Pool
+                {/* <span className="text-zinc-400">*</span> */}
               </p>
-              {formData.errmsg &&
+              {/* {formData.errmsg &&
                 formData.propertyDetails_propertySummary_state === "" && (
                   <span className="text-red-500 text-xs">Required Field</span>
-                )}
+                )} */}
             </div>
             <div className="flex flex-col items-start p-0 gap-1 w-full">
               <input
@@ -1366,7 +1616,12 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
       {/* Description */}
       <div className="flex flex-col items-start p-4 gap-5 w-full bg-white shadow-md rounded-lg md:h-[240px]">
         {/* Title */}
-        <p className="text-lg font-medium text-zinc-500">Description</p>
+        <p className="text-lg font-medium text-zinc-500">
+          Description{" "}
+          {formData.errmsg && formData.propertyDetails_description === "" && (
+            <span className="text-red-500 text-xs">Required Field</span>
+          )}
+        </p>
         {/* Divider */}
         <div className="w-full h-px bg-zinc-200"></div>
 

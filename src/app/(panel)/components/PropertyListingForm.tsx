@@ -10,6 +10,7 @@ import FormPart2 from "../list-new-property/form-parts/FormPart2";
 import FormPart3 from "../list-new-property/form-parts/FormPart3";
 import FormPart4 from "../list-new-property/form-parts/FormPart4";
 import { FormData } from "@/types/formData";
+import DiscardDraftModal from "../list-new-property/modals/DiscardDraftModal";
 
 const PropertyListingForm: React.FC = () => {
   const router = useRouter();
@@ -36,13 +37,13 @@ const PropertyListingForm: React.FC = () => {
     propertyDetails_propertySummary_priceEstimation: 0,
     propertyDetails_propertyImages_primary: null,
     propertyDetails_propertyImages_others: [],
-
     propertyDetails_propertyDetails_planToSell: "",
     propertyDetails_propertyDetails_propertyType: "",
     propertyDetails_propertyDetails_ownershipStatus: "",
     propertyDetails_propertyDetails_propertyCondition: "",
     propertyDetails_propertyDetails_occupancyStatus: "",
     propertyDetails_propertyDetails_propertyManager: "",
+    propertyDetails_propertyDetails_furnish: "",
     propertyDetails_propertyDetails_furniture: "",
     propertyDetails_propertyDetails_propertyIssues: [],
     propertyDetails_propertySpecifications_propertyCertificate: "",
@@ -71,38 +72,94 @@ const PropertyListingForm: React.FC = () => {
     markets_markets: "",
 
     errmsg: false,
+    validEmail: false,
+    validMap: false,
   });
+
+  const [DiscardDraftModalOpen, setDiscardDraftModalOpen] =
+    useState<boolean>(false);
 
   const nextStep = () => {
     console.log(formData);
-    setStep(step + 1);
-    // const allFieldsFilled =
-    //   formData.name &&
-    //   formData.contactPh &&
-    //   formData.contactEm &&
-    //   formData.address &&
-    //   formData.mapLink &&
-    //   formData.landArea > 0 &&
-    //   formData.buildingArea > 0 &&
-    //   formData.priceEstimation > 0;
 
-    // const isValidEmail = formData.validEmail;
-    // const isValidMap = formData.validMap;
+    let allFieldsFilled = false;
 
-    // if (allFieldsFilled && isValidEmail && isValidMap) {
-    //   setFormData((prevData) => ({
-    //     ...prevData,
-    //     errmsg: false,
-    //   }));
-    //   window.scrollTo({ top: 0, behavior: "smooth" });
-    //   setStep(step + 1);
-    // } else {
-    //   setFormData((prevData) => ({
-    //     ...prevData,
-    //     errmsg: true,
-    //   }));
-    //   window.scrollTo({ top: 0, behavior: "smooth" });
-    // }
+    switch (step) {
+      case 1:
+        allFieldsFilled =
+          !!formData.propertyDetails_propertyStatus_phase &&
+          !!formData.propertyDetails_propertyStatus_status &&
+          !!formData.propertyDetails_propertyStatus_rentalStatus &&
+          !!formData.propertyDetails_issuerDetails_issuedBy &&
+          !!formData.propertyDetails_issuerDetails_name &&
+          !!formData.propertyDetails_issuerDetails_phoneNum &&
+          !!formData.propertyDetails_issuerDetails_email &&
+          !!formData.propertyDetails_propertySummary_title &&
+          !!formData.propertyDetails_propertySummary_googleMapUrl &&
+          !!formData.propertyDetails_propertySummary_country &&
+          !!formData.propertyDetails_propertySummary_state &&
+          !!formData.propertyDetails_propertySummary_city &&
+          !!formData.propertyDetails_propertySummary_district &&
+          !!formData.propertyDetails_propertySummary_address &&
+          formData.propertyDetails_propertySummary_landArea > 0 &&
+          formData.propertyDetails_propertySummary_buildingArea > 0 &&
+          formData.propertyDetails_propertySummary_priceEstimation > 0 &&
+          formData.propertyDetails_propertyImages_primary !== null &&
+          formData.propertyDetails_propertyImages_others.length > 0 &&
+          !!formData.propertyDetails_propertyDetails_planToSell &&
+          !!formData.propertyDetails_propertyDetails_propertyType &&
+          !!formData.propertyDetails_propertyDetails_ownershipStatus &&
+          !!formData.propertyDetails_propertyDetails_propertyCondition &&
+          !!formData.propertyDetails_propertyDetails_occupancyStatus &&
+          !!formData.propertyDetails_propertyDetails_propertyManager &&
+          !!formData.propertyDetails_propertyDetails_furnish &&
+          formData.propertyDetails_propertyDetails_propertyIssues.length > 0 &&
+          !!formData.propertyDetails_description;
+
+        allFieldsFilled =
+          allFieldsFilled && formData.validEmail && formData.validMap;
+        break;
+
+      case 2:
+        allFieldsFilled =
+          formData.financials_token_tokenPrice > 0 &&
+          formData.financials_token_tokenSupply > 0 &&
+          formData.financials_token_tokenValue > 0 &&
+          formData.financials_propertyFinancials_furnitureValueEstimation > 0 &&
+          formData.financials_propertyFinancials_legalAdminCost > 0 &&
+          formData.financials_propertyFinancials_platformListingFee > 0 &&
+          formData.financials_propertyFinancials_marketingMangementCost > 0 &&
+          formData.financials_propertyFinancials_propertyTaxes > 0 &&
+          formData.financials_propertyFinancials_rentalTaxes > 0 &&
+          formData.financials_propertyFinancials_rentalYeild > 0;
+        break;
+
+      case 3:
+        allFieldsFilled = formData.documents_documents.length > 0;
+        break;
+
+      case 4:
+        allFieldsFilled = !!formData.markets_markets.trim();
+        break;
+
+      default:
+        break;
+    }
+
+    if (allFieldsFilled) {
+      setFormData((prevData) => ({
+        ...prevData,
+        errmsg: false,
+      }));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setStep(step + 1);
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        errmsg: true,
+      }));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   const prevStep = () => {
@@ -139,24 +196,25 @@ const PropertyListingForm: React.FC = () => {
           </div>
           <div className="flex flex-col md:flex-row justify-between items-center p-4 gap-2.5 bg-white shadow rounded-lg">
             <div className="flex flex-col md:flex-row gap-2.5">
-              <Button
-                leftIcon={<CaretLeft weight="fill" />}
-                width="140px"
-                height="40px"
-                padding="12px 16px"
-                bg="white"
-                boxShadow="lg"
-                borderRadius="full"
-                color="zinc.700"
-                fontSize="14px"
-                fontWeight="500"
-                _focus={{ bg: "teal.200" }}
-                _hover={{ bg: "teal.200" }}
-                onClick={prevStep}
-                isDisabled={step === 1}
-              >
-                Back
-              </Button>
+              {!(step === 1) && (
+                <Button
+                  leftIcon={<CaretLeft weight="fill" />}
+                  width="140px"
+                  height="40px"
+                  padding="12px 16px"
+                  bg="white"
+                  boxShadow="lg"
+                  borderRadius="full"
+                  color="zinc.700"
+                  fontSize="14px"
+                  fontWeight="500"
+                  _focus={{ bg: "teal.200" }}
+                  _hover={{ bg: "teal.200" }}
+                  onClick={prevStep}
+                >
+                  Back
+                </Button>
+              )}
 
               <Button
                 width="140px"
@@ -170,9 +228,17 @@ const PropertyListingForm: React.FC = () => {
                 fontWeight="500"
                 _focus={{ bg: "red.100" }}
                 _hover={{ bg: "red.100" }}
+                onClick={() => setDiscardDraftModalOpen(true)}
               >
                 Discard
               </Button>
+
+              <DiscardDraftModal
+                isOpen={DiscardDraftModalOpen}
+                onClose={() => {
+                  setDiscardDraftModalOpen(false);
+                }}
+              />
             </div>
 
             <div className="flex flex-col md:flex-row gap-2.5">
@@ -193,22 +259,42 @@ const PropertyListingForm: React.FC = () => {
                 Save as Draft
               </Button>
 
-              <Button
-                width="140px"
-                height="40px"
-                padding="12px 16px"
-                bg="teal.600"
-                boxShadow="lg"
-                borderRadius="full"
-                color="white"
-                fontSize="14px"
-                fontWeight="500"
-                _focus={{ bg: "teal.300" }}
-                _hover={{ bg: "teal.300" }}
-                onClick={nextStep}
-              >
-                Next
-              </Button>
+              {step < 4 && (
+                <Button
+                  width="140px"
+                  height="40px"
+                  padding="12px 16px"
+                  bg="teal.600"
+                  boxShadow="lg"
+                  borderRadius="full"
+                  color="white"
+                  fontSize="14px"
+                  fontWeight="500"
+                  _focus={{ bg: "teal.700" }}
+                  _hover={{ bg: "teal.700" }}
+                  onClick={nextStep}
+                >
+                  Next
+                </Button>
+              )}
+              {step === 4 && (
+                <Button
+                  width="140px"
+                  height="40px"
+                  padding="12px 16px"
+                  bg="teal.600"
+                  boxShadow="lg"
+                  borderRadius="full"
+                  color="white"
+                  fontSize="14px"
+                  fontWeight="500"
+                  _focus={{ bg: "teal.700" }}
+                  _hover={{ bg: "teal.700" }}
+                  onClick={() => alert("Sumbit Action Not added")}
+                >
+                  Submit
+                </Button>
+              )}
             </div>
           </div>
         </div>

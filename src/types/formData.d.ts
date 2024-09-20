@@ -24,6 +24,7 @@ export interface FormData {
   propertyDetails_propertyDetails_propertyCondition: string;
   propertyDetails_propertyDetails_occupancyStatus: string;
   propertyDetails_propertyDetails_propertyManager: string;
+  propertyDetails_propertyDetails_furnish: string;
   propertyDetails_propertyDetails_furniture: string;
   propertyDetails_propertyDetails_propertyIssues: string[];
   propertyDetails_propertySpecifications_propertyCertificate: string;
@@ -47,9 +48,11 @@ export interface FormData {
   financials_propertyFinancials_rentalTaxes: number;
   financials_propertyFinancials_rentalYeild: number;
 
-  documents_documents: string[];
+  documents_documents: (File | string)[];
 
   markets_markets: string;
 
   errmsg: boolean;
+  validEmail: boolean;
+  validMap: boolean;
 }

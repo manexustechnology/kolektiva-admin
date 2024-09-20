@@ -27,7 +27,7 @@ const FormPart4: React.FC<FormPart4Props> = ({ formData, setFormData }) => {
         {/* 1 */}
         <div className="flex flex-col items-start p-0 gap-2.5 w-1/4 flex-grow">
           <div className="w-full h-[6px] bg-teal-600 rounded-full" />
-          <div className="text-base font-medium text-zinc-700">
+          <div className="text-sm md:text-base  font-medium text-zinc-700">
             1. Property Details
           </div>
         </div>
@@ -35,7 +35,7 @@ const FormPart4: React.FC<FormPart4Props> = ({ formData, setFormData }) => {
         {/* 2 */}
         <div className="flex flex-col items-start p-0 gap-2.5 w-1/4 flex-grow">
           <div className="w-full h-[6px] bg-teal-600 rounded-full" />
-          <div className="text-base font-normal text-zinc-400">
+          <div className="text-sm md:text-base  font-normal text-zinc-400">
             2. Financials
           </div>
         </div>
@@ -43,7 +43,7 @@ const FormPart4: React.FC<FormPart4Props> = ({ formData, setFormData }) => {
         {/* 3 */}
         <div className="flex flex-col items-start p-0 gap-2.5 w-1/4 flex-grow">
           <div className="w-full h-[6px] bg-teal-600 rounded-full" />
-          <div className="text-base font-normal text-zinc-400">
+          <div className="text-sm md:text-base  font-normal text-zinc-400">
             3. Documents
           </div>
         </div>
@@ -51,14 +51,21 @@ const FormPart4: React.FC<FormPart4Props> = ({ formData, setFormData }) => {
         {/* 4 */}
         <div className="flex flex-col items-start p-0 gap-2.5 w-1/4 flex-grow">
           <div className="w-full h-[6px] bg-teal-600 rounded-full" />
-          <div className="text-base font-medium text-zinc-700">4. Markets</div>
+          <div className="text-sm md:text-base  font-medium text-zinc-700">
+            4. Markets
+          </div>
         </div>
       </div>
 
       {/* Makets */}
       <div className="flex flex-col items-start p-4 gap-5 w-full bg-white shadow-md rounded-lg md:h-[240px]">
         {/* Title */}
-        <p className="text-lg font-medium text-zinc-500">Markets</p>
+        <p className="text-lg font-medium text-zinc-500">
+          Markets{" "}
+          {formData.errmsg && formData.markets_markets === "" && (
+            <span className="text-red-500 text-xs">Required Field</span>
+          )}
+        </p>
         {/* Divider */}
         <div className="w-full h-px bg-zinc-200"></div>
 
