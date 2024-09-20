@@ -3,7 +3,7 @@
 import { Suspense } from "react";
 import ListedPropertyPage from "../components/ListedPropertyPage";
 
-export default async function ListedProperty() {
+export default function ListedProperty() {
   return (
     <>
       <Suspense>
