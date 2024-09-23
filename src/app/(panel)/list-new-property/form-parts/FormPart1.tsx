@@ -920,7 +920,10 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
 
           {formData.propertyDetails_propertyImages_others.map(
             (image, index) => (
-              <div className="key={index} flex flex-col md:flex-row md:items-center md:justify-between p-4 gap-3 bg-white shadow-md rounded-md">
+              <div
+                key={index}
+                className="flex flex-col md:flex-row md:items-center md:justify-between p-4 gap-3 bg-white shadow-md rounded-md"
+              >
                 <div className="flex items-center gap-3">
                   {" "}
                   <Image
