@@ -381,7 +381,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
           <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
             <div className="flex flex-row items-center p-0 gap-0.75">
               <p className="text-sm font-normal text-zinc-700">
-                Rental Status <span className="text-zinc-400">*</span>
+                Issued By <span className="text-zinc-400">*</span>
               </p>
               {formData.errmsg &&
                 formData.propertyDetails_issuerDetails_issuedBy === "" && (
