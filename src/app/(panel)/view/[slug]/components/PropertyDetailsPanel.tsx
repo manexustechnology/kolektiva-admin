@@ -28,8 +28,8 @@ const PropertyDetailsPanel: React.FC<PropertyDetailsPanelProps> = ({
 
   const truncateText = (text: string, maxLength: number) => {
     if (text.length <= maxLength) return text;
-    const start = text.slice(0, 6);
-    const end = text.slice(-6);
+    const start = text.slice(0, 10);
+    const end = text.slice(-10);
     return `${start}...${end}`;
   };
 
@@ -171,7 +171,10 @@ const PropertyDetailsPanel: React.FC<PropertyDetailsPanelProps> = ({
                     )
                   }
                 >
-                  {formData.propertyDetails_propertySummary_googleMapUrl}{" "}
+                  {truncateText(
+                    formData.propertyDetails_propertySummary_googleMapUrl,
+                    20
+                  )}
                 </span>
                 <ArrowSquareOut
                   color="black"

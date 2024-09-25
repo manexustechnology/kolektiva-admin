@@ -24,7 +24,7 @@ const PropertyDeletionPanel: React.FC<PropertyDeletionPanelProps> = ({
       {/* Makets */}
       <div className="flex flex-col items-start p-4 gap-5 w-full bg-white shadow-md rounded-lg">
         {/* Title */}
-        <p className="text-lg font-medium text-zinc-500">Markets</p>
+        <p className="text-lg font-medium text-zinc-500">Property Deletion</p>
         {/* Divider */}
         <div className="w-full h-px bg-zinc-200"></div>
         <p className="font-normal text-sm text-zinc-500">
