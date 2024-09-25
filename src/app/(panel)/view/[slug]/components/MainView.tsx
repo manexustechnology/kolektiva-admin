@@ -130,7 +130,7 @@ const MainView: React.FC = () => {
             index={tabIndex}
             onChange={(index: number) => setTabIndex(index)}
           >
-            <TabList gap="2">
+            <TabList className="flex overflow-x-auto gap-2 scrollbar-hidden">
               <Tab fontSize="sm">Property Details</Tab>
 
               <Tab fontSize="sm">Financials</Tab>
