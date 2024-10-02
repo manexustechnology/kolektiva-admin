@@ -24,7 +24,7 @@ import { Eye } from "@phosphor-icons/react";
 import { SorterResult } from "antd/es/table/interface";
 import { Box, Input, Button } from "@chakra-ui/react";
 import { generateJWTBearerForAdmin } from "@/utils/jwt";
-import { fetchGetAdminListedProperty } from "@/fetch/admin/listed-propery.fetch";
+import { fetchGetAdminListedProperty } from "@/api/admin/listed-propery.fetch";
 import dayjs from "dayjs";
 import { AdminListedPropertyResponse } from "@/types/admin/listed-property";
 import { useQuery } from "@tanstack/react-query";

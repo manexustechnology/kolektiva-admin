@@ -3,69 +3,142 @@
 import { Button } from "@chakra-ui/react";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PanelLayout from "../layout/PanelLayout";
 import FormPart1 from "../list-new-property/form-parts/FormPart1";
 import FormPart2 from "../list-new-property/form-parts/FormPart2";
 import FormPart3 from "../list-new-property/form-parts/FormPart3";
 import FormPart4 from "../list-new-property/form-parts/FormPart4";
-import { FormData } from "@/types/formData";
+import { FormData as FormDataType } from "@/types/formData";
 import DiscardDraftModal from "../list-new-property/modals/DiscardDraftModal";
+import { submitPropertyListingRequest } from "@/api/property-listing-request.post";
+import { generateJWTBearerForAdmin } from "@/utils/jwt";
+import dynamic from "next/dynamic";
+import { useSession } from "next-auth/react";
+import FormData from "form-data";
+import { uploadFileToCloudinary } from "@/utils/cloudinary";
 
 const PropertyListingForm: React.FC = () => {
+  const { data: session } = useSession();
   const router = useRouter();
+
   const [isRequestSentModalOpen, setIsRequestSentModal] =
     useState<boolean>(false);
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState<FormData>({
-    propertyDetails_propertyStatus_phase: "",
-    propertyDetails_propertyStatus_status: "",
+  // const [formData, setFormData] = useState<FormDataType>({
+  //   propertyDetails_propertyStatus_phase: "",
+  //   propertyDetails_propertyStatus_status: "",
+  //   propertyDetails_propertyStatus_rentalStatus: "",
+  //   propertyDetails_issuerDetails_issuedBy: "",
+  //   propertyDetails_issuerDetails_name: "",
+  //   propertyDetails_issuerDetails_phoneNum: "",
+  //   propertyDetails_issuerDetails_email: "",
+  //   propertyDetails_propertySummary_title: "",
+  //   propertyDetails_propertySummary_googleMapUrl: "",
+  //   propertyDetails_propertySummary_country: "",
+  //   propertyDetails_propertySummary_state: "",
+  //   propertyDetails_propertySummary_city: "",
+  //   propertyDetails_propertySummary_district: "",
+  //   propertyDetails_propertySummary_address: "",
+  //   propertyDetails_propertySummary_landArea: 0,
+  //   propertyDetails_propertySummary_buildingArea: 0,
+  //   propertyDetails_propertySummary_priceEstimation: 0,
+  //   propertyDetails_propertyImages_primary: null,
+  //   propertyDetails_propertyImages_others: [],
+  //   propertyDetails_propertyDetails_planToSell: "",
+  //   propertyDetails_propertyDetails_propertyType: "",
+  //   propertyDetails_propertyDetails_ownershipStatus: "",
+  //   propertyDetails_propertyDetails_propertyCondition: "",
+  //   propertyDetails_propertyDetails_occupancyStatus: "",
+  //   propertyDetails_propertyDetails_propertyManager: "",
+  //   propertyDetails_propertyDetails_furnish: "",
+  //   propertyDetails_propertyDetails_furniture: "",
+  //   propertyDetails_propertyDetails_propertyIssues: [],
+  //   propertyDetails_propertySpecifications_propertyCertificate: "",
+  //   propertyDetails_propertySpecifications_floors: 0,
+  //   propertyDetails_propertySpecifications_waterSupply: "",
+  //   propertyDetails_propertySpecifications_bedrooms: 0,
+  //   propertyDetails_propertySpecifications_bathrooms: 0,
+  //   propertyDetails_propertySpecifications_garage: "",
+  //   propertyDetails_propertySpecifications_garden: "",
+  //   propertyDetails_propertySpecifications_swimPool: "",
+  //   propertyDetails_description: "",
+
+  //   financials_token_tokenPrice: 0,
+  //   financials_token_tokenSupply: 0,
+  //   financials_token_tokenValue: 0,
+  //   financials_propertyFinancials_furnitureValueEstimation: 0,
+  //   financials_propertyFinancials_legalAdminCost: 0,
+  //   financials_propertyFinancials_platformListingFee: 0,
+  //   financials_propertyFinancials_marketingMangementCost: 0,
+  //   financials_propertyFinancials_propertyTaxes: 0,
+  //   financials_propertyFinancials_rentalTaxes: 0,
+  //   financials_propertyFinancials_rentalYeild: 0,
+
+  //   documents_documents: [],
+
+  //   markets_markets: "",
+
+  //   errmsg: false,
+  //   validEmail: false,
+  //   validMap: false,
+  // });
+
+  const [formData, setFormData] = useState<FormDataType>({
+    propertyDetails_propertyStatus_phase: "Initial Offering",
+    propertyDetails_propertyStatus_status: "Visible",
     propertyDetails_propertyStatus_rentalStatus: "",
-    propertyDetails_issuerDetails_issuedBy: "",
-    propertyDetails_issuerDetails_name: "",
-    propertyDetails_issuerDetails_phoneNum: "",
-    propertyDetails_issuerDetails_email: "",
-    propertyDetails_propertySummary_title: "",
-    propertyDetails_propertySummary_googleMapUrl: "",
-    propertyDetails_propertySummary_country: "",
-    propertyDetails_propertySummary_state: "",
-    propertyDetails_propertySummary_city: "",
-    propertyDetails_propertySummary_district: "",
-    propertyDetails_propertySummary_address: "",
-    propertyDetails_propertySummary_landArea: 0,
-    propertyDetails_propertySummary_buildingArea: 0,
-    propertyDetails_propertySummary_priceEstimation: 0,
+    propertyDetails_issuerDetails_issuedBy: "Property Owner",
+    propertyDetails_issuerDetails_name: "John Doe",
+    propertyDetails_issuerDetails_phoneNum: "62812293329326",
+    propertyDetails_issuerDetails_email: "jane_doe@gmail.com",
+    propertyDetails_propertySummary_title: "99 Cokoraminoto",
+    propertyDetails_propertySummary_googleMapUrl:
+      "https://maps.app.goo.gl/sh7oZxN81X3qNps4A",
+    propertyDetails_propertySummary_country: "USA",
+    propertyDetails_propertySummary_state: "New York",
+    propertyDetails_propertySummary_city: "New York City",
+    propertyDetails_propertySummary_district: "Manhattan",
+    propertyDetails_propertySummary_address: "1234 5th Ave, New York, NY 10001",
+    propertyDetails_propertySummary_landArea: 102,
+    propertyDetails_propertySummary_buildingArea: 72,
+    propertyDetails_propertySummary_priceEstimation: 23443,
     propertyDetails_propertyImages_primary: null,
     propertyDetails_propertyImages_others: [],
-    propertyDetails_propertyDetails_planToSell: "",
-    propertyDetails_propertyDetails_propertyType: "",
-    propertyDetails_propertyDetails_ownershipStatus: "",
-    propertyDetails_propertyDetails_propertyCondition: "",
-    propertyDetails_propertyDetails_occupancyStatus: "",
-    propertyDetails_propertyDetails_propertyManager: "",
-    propertyDetails_propertyDetails_furnish: "",
-    propertyDetails_propertyDetails_furniture: "",
-    propertyDetails_propertyDetails_propertyIssues: [],
-    propertyDetails_propertySpecifications_propertyCertificate: "",
-    propertyDetails_propertySpecifications_floors: 0,
-    propertyDetails_propertySpecifications_waterSupply: "",
-    propertyDetails_propertySpecifications_bedrooms: 0,
-    propertyDetails_propertySpecifications_bathrooms: 0,
-    propertyDetails_propertySpecifications_garage: "",
-    propertyDetails_propertySpecifications_garden: "",
-    propertyDetails_propertySpecifications_swimPool: "",
+    propertyDetails_propertyDetails_planToSell: "ASAP",
+    propertyDetails_propertyDetails_propertyType: "House",
+    propertyDetails_propertyDetails_ownershipStatus:
+      "100% of property ownership",
+    propertyDetails_propertyDetails_propertyCondition: "Well Maintained",
+    propertyDetails_propertyDetails_occupancyStatus: "Vacant",
+    propertyDetails_propertyDetails_propertyManager: "No",
+    propertyDetails_propertyDetails_furnish: "Half Furnished",
+    propertyDetails_propertyDetails_furniture: "Stove, dishwasher, furnace",
+    propertyDetails_propertyDetails_propertyIssues: [
+      "Roof",
+      "Plumbing",
+      "Fire Damage",
+    ],
+    propertyDetails_propertySpecifications_propertyCertificate: "immediately",
+    propertyDetails_propertySpecifications_floors: 2,
+    propertyDetails_propertySpecifications_waterSupply: "PDAM Water Supply",
+    propertyDetails_propertySpecifications_bedrooms: 3,
+    propertyDetails_propertySpecifications_bathrooms: 2,
+    propertyDetails_propertySpecifications_garage: "1",
+    propertyDetails_propertySpecifications_garden: "1",
+    propertyDetails_propertySpecifications_swimPool: "1",
     propertyDetails_description: "",
 
-    financials_token_tokenPrice: 0,
-    financials_token_tokenSupply: 0,
-    financials_token_tokenValue: 0,
-    financials_propertyFinancials_furnitureValueEstimation: 0,
-    financials_propertyFinancials_legalAdminCost: 0,
-    financials_propertyFinancials_platformListingFee: 0,
-    financials_propertyFinancials_marketingMangementCost: 0,
-    financials_propertyFinancials_propertyTaxes: 0,
-    financials_propertyFinancials_rentalTaxes: 0,
-    financials_propertyFinancials_rentalYeild: 0,
+    financials_token_tokenPrice: 100,
+    financials_token_tokenSupply: 100,
+    financials_token_tokenValue: 10000,
+    financials_propertyFinancials_furnitureValueEstimation: 100,
+    financials_propertyFinancials_legalAdminCost: 100,
+    financials_propertyFinancials_platformListingFee: 100,
+    financials_propertyFinancials_marketingMangementCost: 100,
+    financials_propertyFinancials_propertyTaxes: 100,
+    financials_propertyFinancials_rentalTaxes: 100,
+    financials_propertyFinancials_rentalYeild: 1,
 
     documents_documents: [],
 
@@ -78,6 +151,12 @@ const PropertyListingForm: React.FC = () => {
 
   const [DiscardDraftModalOpen, setDiscardDraftModalOpen] =
     useState<boolean>(false);
+
+  const scrollToTop = () => {
+    // if (typeof window !== "undefined") {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    // }
+  };
 
   const nextStep = () => {
     console.log(formData);
@@ -151,20 +230,68 @@ const PropertyListingForm: React.FC = () => {
         ...prevData,
         errmsg: false,
       }));
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      scrollToTop();
       setStep(step + 1);
     } else {
       setFormData((prevData) => ({
         ...prevData,
         errmsg: true,
       }));
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      scrollToTop();
     }
   };
 
   const prevStep = () => {
     setStep(step - 1);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollToTop();
+  };
+
+  const handleOnClick = async () => {
+    try {
+      const token = await generateJWTBearerForAdmin(session?.user?.email || "");
+      const newFormData = {
+        ...formData,
+        name: formData.propertyDetails_issuerDetails_email,
+        phone: formData.propertyDetails_issuerDetails_phoneNum,
+        email: formData.propertyDetails_issuerDetails_email,
+        address: formData.propertyDetails_propertySummary_address,
+        priceEstimation:
+          formData.propertyDetails_propertySummary_priceEstimation,
+      } as any;
+      for (const [key, value] of Object.entries(formData)) {
+        if (value instanceof File) {
+          const url = await uploadFileToCloudinary(value); // Await properly here
+          newFormData[key] = url;
+        } else if (Array.isArray(value)) {
+          await Promise.all(
+            value.map(async (item, index) => {
+              if (item instanceof File) {
+                const url = await uploadFileToCloudinary(item);
+                newFormData[key][index] = url;
+              } else if (
+                typeof item === "string" &&
+                (item.startsWith("http://") || item.startsWith("https://"))
+              ) {
+                newFormData[key][index] = item; // Assume string starting with 'http://' or 'https://' is a URL
+              }
+            })
+          );
+        }
+      }
+      const response = await submitPropertyListingRequest(newFormData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response);
+      if (response.status === 200 && response.data) {
+        console.log("Submission successful", response);
+      } else {
+        console.log("Submission failed", response);
+      }
+    } catch (error) {
+      console.error("Error submitting property listing:", error);
+    }
   };
 
   return (
@@ -173,7 +300,7 @@ const PropertyListingForm: React.FC = () => {
         {" "}
         <div className="w-full p-8 gap-6">
           <p className="flex items-center">
-            <span className="text-lg text-neutral-500 text-lg font-medium text-left gap-4">
+            <span className="text-lg text-neutral-500 font-medium text-left gap-4">
               Property List
             </span>
             <CaretRight weight="fill" color="#D4D4D8" />
@@ -290,7 +417,8 @@ const PropertyListingForm: React.FC = () => {
                   fontWeight="500"
                   _focus={{ bg: "teal.700" }}
                   _hover={{ bg: "teal.700" }}
-                  onClick={() => alert("Sumbit Action Not added")}
+                  // onClick={() => alert("Sumbit Action Not added")}
+                  onClick={handleOnClick}
                 >
                   Submit
                 </Button>

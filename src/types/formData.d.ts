@@ -16,8 +16,8 @@ export interface FormData {
   propertyDetails_propertySummary_landArea: number;
   propertyDetails_propertySummary_buildingArea: number;
   propertyDetails_propertySummary_priceEstimation: number;
-  propertyDetails_propertyImages_primary: File | null;
-  propertyDetails_propertyImages_others: File[];
+  propertyDetails_propertyImages_primary: (File | string) | null;
+  propertyDetails_propertyImages_others: (File | string)[];
   propertyDetails_propertyDetails_planToSell: string;
   propertyDetails_propertyDetails_propertyType: string;
   propertyDetails_propertyDetails_ownershipStatus: string;
