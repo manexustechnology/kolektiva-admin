@@ -1,4 +1,4 @@
-export interface FormData {
+export interface PropertyData {
   propertyDetails_propertyStatus_phase: string;
   propertyDetails_propertyStatus_status: string;
   propertyDetails_propertyStatus_rentalStatus: string;
@@ -16,8 +16,8 @@ export interface FormData {
   propertyDetails_propertySummary_landArea: number;
   propertyDetails_propertySummary_buildingArea: number;
   propertyDetails_propertySummary_priceEstimation: number;
-  propertyDetails_propertyImages_primary: File | null;
-  propertyDetails_propertyImages_others: File[];
+  propertyDetails_propertyImages_primary: string;
+  propertyDetails_propertyImages_others: string[];
   propertyDetails_propertyDetails_planToSell: string;
   propertyDetails_propertyDetails_propertyType: string;
   propertyDetails_propertyDetails_ownershipStatus: string;
@@ -48,7 +48,7 @@ export interface FormData {
   financials_propertyFinancials_rentalTaxes: number;
   financials_propertyFinancials_rentalYeild: number;
 
-  documents_documents: (File | string)[];
+  documents_documents: string[];
 
   markets_markets: string;
 

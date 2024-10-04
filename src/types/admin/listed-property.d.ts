@@ -1,3 +1,5 @@
+import { PropertyData } from "../property-data";
+
 export interface GetAdminListedPropertyParams {
   page: number;
   perPage: number;
@@ -30,4 +32,9 @@ export interface AdminListedPropertyResponse {
   createdAt: Date;
   updatedAt: Date;
   deletedAt: any;
+  propertyData: PropertyData;
+}
+
+export interface ChangeListedPropertyStatus {
+  status: "pending" | "initialOffering" | "afterMarket";
 }

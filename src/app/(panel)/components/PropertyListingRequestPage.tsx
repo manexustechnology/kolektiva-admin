@@ -23,10 +23,14 @@ import { Eye } from "@phosphor-icons/react";
 import { SorterResult } from "antd/es/table/interface";
 import { Box, Input, Select } from "@chakra-ui/react";
 import { generateJWTBearerForAdmin } from "@/utils/jwt";
-import { fetchGetAdminListedProperty } from "@/api/admin/listed-property.fetch";
+import { fetchGetAdminListedProperty } from "@/fetch/admin/listed-property.fetch";
 import dayjs from "dayjs";
 import { useQuery } from "@tanstack/react-query";
-import { fetchGetAdminPropertyListingRequest } from "@/api/admin/property-listing-request.fetch";
+import {
+  fetchChangePropertyListingRequestStatus,
+  fetchGetAdminPropertyListingRequest,
+  fetchGetAdminPropertyListingRequestDetail,
+} from "@/fetch/admin/property-listing-request.fetch";
 import { AdminPropertyListingRequestResponse } from "@/types/admin/property-listing-request";
 
 interface TableParams {
@@ -76,11 +80,42 @@ const PropertyListingRequestPage: React.FC = () => {
     filters: IMarketFilter;
   }
 
-  const handleMenuClick = (key: string, record: any) => {
+  const handleMenuClick = async (key: string, record: any) => {
+    const token = await generateJWTBearerForAdmin(session?.user?.email || "");
     if (key === "view") {
-      router.push(`/linkA/${record.id}`);
+      // router.push(`/linkA/${record.id}`);
+      const response = await fetchGetAdminPropertyListingRequestDetail(
+        record.id,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("view listing", response);
     } else if (key === "edit") {
-      router.push(`/linkB/${record.id}`);
+      // router.push(`/linkB/${record.id}`);
+      try {
+        const response = await fetchChangePropertyListingRequestStatus(
+          record.id,
+          {
+            status: "approved",
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200 && response.data) {
+          console.log("Submission successful", response);
+        } else {
+          console.log("Submission failed", response);
+        }
+      } catch (error) {
+        // Handle the error if necessary
+      }
     }
   };
 

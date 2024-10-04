@@ -24,7 +24,11 @@ import { Eye } from "@phosphor-icons/react";
 import { SorterResult } from "antd/es/table/interface";
 import { Box, Input, Button } from "@chakra-ui/react";
 import { generateJWTBearerForAdmin } from "@/utils/jwt";
-import { fetchGetAdminListedProperty } from "@/api/admin/listed-propery.fetch";
+import {
+  fetchChangeListedPropertyStatus,
+  fetchGetAdminListedProperty,
+  fetchGetAdminListedPropertyDetail,
+} from "@/fetch/admin/listed-property.fetch";
 import dayjs from "dayjs";
 import { AdminListedPropertyResponse } from "@/types/admin/listed-property";
 import { useQuery } from "@tanstack/react-query";
@@ -64,11 +68,40 @@ const ListedPropertyPage: React.FC = () => {
     filters: IMarketFilter;
   }
 
-  const handleMenuClick = (key: string, record: any) => {
+  const handleMenuClick = async (key: string, record: any) => {
+    const token = await generateJWTBearerForAdmin(session?.user?.email || "");
+
     if (key === "view") {
-      router.push(`/view/${record.id}`);
+      // router.push(`/view/${record.id}`);
+      const response = await fetchGetAdminListedPropertyDetail(record.id, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("view listing", response);
     } else if (key === "edit") {
-      router.push(`/edit/${record.id}`);
+      // router.push(`/edit/${record.id}`);
+      try {
+        const response = await fetchChangeListedPropertyStatus(
+          record.id,
+          {
+            status: "initialOffering",
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200 && response.data) {
+          console.log("Submission successful", response);
+        } else {
+          console.log("Submission failed", response);
+        }
+      } catch (error) {
+        // Handle the error if necessary
+      }
     }
   };
 

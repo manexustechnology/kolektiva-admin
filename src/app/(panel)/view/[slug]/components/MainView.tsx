@@ -118,7 +118,7 @@ const MainView: React.FC = () => {
         {" "}
         <div className="w-full p-8 gap-6">
           <p className="flex items-center mb-8">
-            <span className="text-lg text-neutral-500 text-lg font-medium text-left gap-4">
+            <span className="text-lg text-neutral-500 font-medium text-left gap-4">
               Property List
             </span>
             <CaretRight weight="fill" color="#D4D4D8" />
