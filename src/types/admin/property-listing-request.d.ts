@@ -1,3 +1,5 @@
+import { PropertyData } from "../property-data";
+
 export interface GetAdminPropertyListingRequestParams {
   page: number;
   perPage: number;
@@ -13,7 +15,7 @@ export interface AdminPropertyListingRequestResponse {
   address: string;
   priceEstimation: string;
   status: string;
-  propertyData: PropertyListingRequestPropertyData;
+  propertyData: PropertyData;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -31,4 +33,8 @@ export interface PropertyListingRequestPropertyData {
   propertyManager: string;
   includedFurniture: string;
   propertyCondition: string;
+}
+
+export interface ChangePropertyListingRequestStatus {
+  status: "pending" | "oncheck" | "approved" | "rejected" | "archived";
 }

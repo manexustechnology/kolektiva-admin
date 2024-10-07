@@ -19,7 +19,11 @@ interface SidebarProps {
   onShow?: (isShowed: boolean) => void;
 }
 
-interface SidebarItemProps extends React.DetailedHTMLProps<React.LiHTMLAttributes<HTMLLIElement>, HTMLLIElement> {
+interface SidebarItemProps
+  extends React.DetailedHTMLProps<
+    React.LiHTMLAttributes<HTMLLIElement>,
+    HTMLLIElement
+  > {
   icon?: ReactElement | string;
   text?: ReactElement | string;
   active?: boolean;
@@ -49,7 +53,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
     if (onShow) {
       onShow(expanded);
     }
-  }, [expanded]);
+  }, [expanded, onShow]);
 
   useEffect(() => {
     setExpanded(isShowed || false);
@@ -65,8 +69,9 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
       <nav className="flex flex-col bg-white border-r shadow-sm">
         <div className="p-4 pb-2 flex justify-between items-center">
           <div
-            className={`flex overflow-hidden transition-all text-nowrap w-52 ${expanded ? "md:w-52" : "md:w-0"
-              }`}
+            className={`flex overflow-hidden transition-all text-nowrap w-52 ${
+              expanded ? "md:w-52" : "md:w-0"
+            }`}
           >
             <Link href="/" passHref>
               <Image
@@ -115,24 +120,27 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
         relative flex items-center py-2 px-3 my-1
         font-medium rounded-md cursor-pointer
         transition-colors group
-        ${active
-          ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
-          : "hover:bg-indigo-50 text-gray-600"
+        ${
+          active
+            ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
+            : "hover:bg-indigo-50 text-gray-600"
         }
     `}
       {...otherProps}
     >
       {icon}
       <span
-        className={`flex overflow-hidden transition-all w-52 ml-3 text-nowrap ${expanded ? "md:w-52" : "md:w-0 md:ml-0"
-          }`}
+        className={`flex overflow-hidden transition-all w-52 ml-3 text-nowrap ${
+          expanded ? "md:w-52" : "md:w-0 md:ml-0"
+        }`}
       >
         {text}
       </span>
       {alert && (
         <div
-          className={`absolute right-2 w-2 h-2 rounded bg-indigo-400 ${expanded ? "" : "top-2"
-            }`}
+          className={`absolute right-2 w-2 h-2 rounded bg-indigo-400 ${
+            expanded ? "" : "top-2"
+          }`}
         />
       )}
 
@@ -163,8 +171,9 @@ export const SidebarTitle: React.FC<SidebarTitleProps> = ({ text }) => {
     >
       {!expanded && <Divider borderColor="gray.400" />}
       <span
-        className={`flex overflow-hidden transition-all w-52 text-md text-nowrap ${expanded ? "md:w-52" : "md:w-0 md:ml-0"
-          }`}
+        className={`flex overflow-hidden transition-all w-52 text-md text-nowrap ${
+          expanded ? "md:w-52" : "md:w-0 md:ml-0"
+        }`}
       >
         {text}
       </span>

@@ -4,32 +4,48 @@ import { useSession } from "next-auth/react";
 import PanelLayout from "../layout/PanelLayout";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Table, Dropdown, Menu, GetProp, TablePaginationConfig, TableProps } from "antd";
+import {
+  Table,
+  Dropdown,
+  Menu,
+  GetProp,
+  TablePaginationConfig,
+  TableProps,
+} from "antd";
 import { IMarketFilter } from "@/types/filter";
-import { CaretDown, MagnifyingGlass, PencilSimpleLine, Plus } from "@phosphor-icons/react/dist/ssr";
+import {
+  CaretDown,
+  MagnifyingGlass,
+  PencilSimpleLine,
+  Plus,
+} from "@phosphor-icons/react/dist/ssr";
 import { Eye } from "@phosphor-icons/react";
 import { SorterResult } from "antd/es/table/interface";
 import { Box, Input, Select } from "@chakra-ui/react";
 import { generateJWTBearerForAdmin } from "@/utils/jwt";
-import { fetchGetAdminListedProperty } from "@/fetch/admin/listed-propery.fetch";
+import { fetchGetAdminListedProperty } from "@/fetch/admin/listed-property.fetch";
 import dayjs from "dayjs";
 import { useQuery } from "@tanstack/react-query";
-import { fetchGetAdminPropertyListingRequest } from "@/fetch/admin/property-listing-request.fetch";
+import {
+  fetchChangePropertyListingRequestStatus,
+  fetchGetAdminPropertyListingRequest,
+  fetchGetAdminPropertyListingRequestDetail,
+} from "@/fetch/admin/property-listing-request.fetch";
 import { AdminPropertyListingRequestResponse } from "@/types/admin/property-listing-request";
 
 interface TableParams {
   pagination?: TablePaginationConfig;
-  sortField?: SorterResult<any>['field'];
-  sortOrder?: SorterResult<any>['order'];
-  filters?: Parameters<GetProp<TableProps, 'onChange'>>[1];
+  sortField?: SorterResult<any>["field"];
+  sortOrder?: SorterResult<any>["order"];
+  filters?: Parameters<GetProp<TableProps, "onChange">>[1];
 }
 
 const statusFilterOptions: string[] = [
-  'pending',
-  'oncheck',
-  'approved',
-  'rejected',
-  'archived',
+  "pending",
+  "oncheck",
+  "approved",
+  "rejected",
+  "archived",
 ];
 
 const PropertyListingRequestPage: React.FC = () => {
@@ -47,7 +63,7 @@ const PropertyListingRequestPage: React.FC = () => {
       showSizeChanger: true,
       showQuickJumper: true,
       pageSizeOptions: ["10", "20", "30", "50", "100"],
-      position: ['bottomCenter'],
+      position: ["bottomCenter"],
     },
   });
   const [searchFilter, setSearchFilter] = useState({
@@ -64,11 +80,42 @@ const PropertyListingRequestPage: React.FC = () => {
     filters: IMarketFilter;
   }
 
-  const handleMenuClick = (key: string, record: any) => {
+  const handleMenuClick = async (key: string, record: any) => {
+    const token = await generateJWTBearerForAdmin(session?.user?.email || "");
     if (key === "view") {
-      router.push(`/linkA/${record.id}`);
+      // router.push(`/linkA/${record.id}`);
+      const response = await fetchGetAdminPropertyListingRequestDetail(
+        record.id,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("view listing", response);
     } else if (key === "edit") {
-      router.push(`/linkB/${record.id}`);
+      // router.push(`/linkB/${record.id}`);
+      try {
+        const response = await fetchChangePropertyListingRequestStatus(
+          record.id,
+          {
+            status: "approved",
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200 && response.data) {
+          console.log("Submission successful", response);
+        } else {
+          console.log("Submission failed", response);
+        }
+      } catch (error) {
+        // Handle the error if necessary
+      }
     }
   };
 
@@ -103,7 +150,7 @@ const PropertyListingRequestPage: React.FC = () => {
           }
           trigger={["click"]}
         >
-          <a href="#">{dayjs(text).format('YYYY-MM-DD HH:mm')} WIB</a>
+          <a href="#">{dayjs(text).format("YYYY-MM-DD HH:mm")} WIB</a>
         </Dropdown>
       ),
     },
@@ -326,24 +373,31 @@ const PropertyListingRequestPage: React.FC = () => {
         router.push("/signin");
       }
     }
-  }, [router, session, domLoaded]);
+  }, [router, session, domLoaded, firstCheckLoggedIn]);
 
-  const fetchData = async (): Promise<AdminPropertyListingRequestResponse[] | undefined> => {
+  const fetchData = async (): Promise<
+    AdminPropertyListingRequestResponse[] | undefined
+  > => {
     if (domLoaded) {
       let result: AdminPropertyListingRequestResponse[] = [];
       setLoading(true);
       try {
-        const token = await generateJWTBearerForAdmin(session?.user?.email || '');
-        const response = await fetchGetAdminPropertyListingRequest({
-          page: Number(tableParams.pagination?.current),
-          perPage: Number(tableParams.pagination?.pageSize),
-          search: searchFilter.search,
-          status: searchFilter.status,
-        }, {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const token = await generateJWTBearerForAdmin(
+          session?.user?.email || ""
+        );
+        const response = await fetchGetAdminPropertyListingRequest(
+          {
+            page: Number(tableParams.pagination?.current),
+            perPage: Number(tableParams.pagination?.pageSize),
+            search: searchFilter.search,
+            status: searchFilter.status,
           },
-        });
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (response.status === 200 && response.data?.data?.data) {
           // setDataSource(response.data.data.data);
@@ -362,12 +416,28 @@ const PropertyListingRequestPage: React.FC = () => {
     }
   };
 
-  const { data: dataSource } = useQuery<AdminPropertyListingRequestResponse[] | undefined>({
-    queryKey: ['listedProperty', tableParams.pagination?.current, tableParams.pagination?.pageSize, tableParams?.sortOrder, tableParams?.sortField, domLoaded, session, searchFilter.search, searchFilter.status],
+  const { data: dataSource } = useQuery<
+    AdminPropertyListingRequestResponse[] | undefined
+  >({
+    queryKey: [
+      "listedProperty",
+      tableParams.pagination?.current,
+      tableParams.pagination?.pageSize,
+      tableParams?.sortOrder,
+      tableParams?.sortField,
+      domLoaded,
+      session,
+      searchFilter.search,
+      searchFilter.status,
+    ],
     queryFn: fetchData,
   });
 
-  const handleTableChange: TableProps<any>['onChange'] = (pagination, filters, sorter) => {
+  const handleTableChange: TableProps<any>["onChange"] = (
+    pagination,
+    filters,
+    sorter
+  ) => {
     setTableParams({
       pagination,
       filters,
@@ -400,10 +470,12 @@ const PropertyListingRequestPage: React.FC = () => {
                   border="none"
                   _placeholder={{ color: "#71717A" }}
                   _focus={{ border: "none" }}
-                  onChange={(e) => setSearchFilter((prev) => ({
-                    ...prev,
-                    search: e.target.value,
-                  }))}
+                  onChange={(e) =>
+                    setSearchFilter((prev) => ({
+                      ...prev,
+                      search: e.target.value,
+                    }))
+                  }
                 />
               </div>
             </div>
@@ -424,10 +496,12 @@ const PropertyListingRequestPage: React.FC = () => {
                 marginRight={5}
                 value={searchFilter.status}
                 className="!py-0"
-                onChange={(e) => setSearchFilter((prev) => ({
-                  ...prev,
-                  status: e.target.value,
-                }))}
+                onChange={(e) =>
+                  setSearchFilter((prev) => ({
+                    ...prev,
+                    status: e.target.value,
+                  }))
+                }
               >
                 {statusFilterOptions.map((value) => {
                   return (
@@ -441,7 +515,7 @@ const PropertyListingRequestPage: React.FC = () => {
           </div>
           <Table
             className="overflow-x-auto "
-            rowKey={(record) => record.id || ''}
+            rowKey={(record) => record.id || ""}
             dataSource={dataSource}
             columns={columns}
             pagination={tableParams.pagination}
@@ -449,8 +523,8 @@ const PropertyListingRequestPage: React.FC = () => {
             onChange={handleTableChange}
           />
         </div>
-      </PanelLayout >
-    </div >
+      </PanelLayout>
+    </div>
   );
 };
 
