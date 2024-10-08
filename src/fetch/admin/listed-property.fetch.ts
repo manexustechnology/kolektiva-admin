@@ -1,10 +1,12 @@
 import {
   GET_ADMIN_LISTED_PROPERTY,
   GET_LISTED_PROPERTY_DETAIL,
-  PATCH_PATCH_LISTED_PROPERTY_STATUS,
+  PATCH_CHANGE_LISTED_PROPERTY_PHASE,
+  PATCH_CHANGE_LISTED_PROPERTY_STATUS,
 } from "@/constants/api-routes.constants";
 import {
   AdminListedPropertyResponse,
+  ChangeListedPropertyPhase,
   ChangeListedPropertyStatus,
   GetAdminListedPropertyParams,
 } from "@/types/admin/listed-property";
@@ -41,7 +43,24 @@ export const fetchChangeListedPropertyStatus = async (
   headers: AxiosRequestConfig
 ): Promise<AxiosResponse<ResponseData<AdminListedPropertyResponse>>> => {
   return await axios.patch(
-    `${PATCH_PATCH_LISTED_PROPERTY_STATUS}/${identifier}`,
+    `${PATCH_CHANGE_LISTED_PROPERTY_STATUS}/${identifier}`,
+    params,
+    {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+      ...headers,
+    }
+  );
+};
+
+export const fetchChangeListedPropertyPhase = async (
+  identifier: string,
+  params: ChangeListedPropertyPhase,
+  headers: AxiosRequestConfig
+): Promise<AxiosResponse<ResponseData<AdminListedPropertyResponse>>> => {
+  return await axios.patch(
+    `${PATCH_CHANGE_LISTED_PROPERTY_PHASE}/${identifier}`,
     params,
     {
       headers: {

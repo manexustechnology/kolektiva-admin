@@ -36,5 +36,9 @@ export interface AdminListedPropertyResponse {
 }
 
 export interface ChangeListedPropertyStatus {
-  status: "pending" | "initialOffering" | "afterMarket";
+  status: "draft" | "visible" | "hidden";
+}
+
+export interface ChangeListedPropertyPhase {
+  phase: "upcoming" | "initial-offering" | "aftermarket";
 }

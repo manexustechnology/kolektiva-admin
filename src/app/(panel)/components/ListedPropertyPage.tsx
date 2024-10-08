@@ -25,6 +25,7 @@ import { SorterResult } from "antd/es/table/interface";
 import { Box, Input, Button } from "@chakra-ui/react";
 import { generateJWTBearerForAdmin } from "@/utils/jwt";
 import {
+  fetchChangeListedPropertyPhase,
   fetchChangeListedPropertyStatus,
   fetchGetAdminListedProperty,
   fetchGetAdminListedPropertyDetail,
@@ -72,20 +73,27 @@ const ListedPropertyPage: React.FC = () => {
     const token = await generateJWTBearerForAdmin(session?.user?.email || "");
 
     if (key === "view") {
-      // router.push(`/view/${record.id}`);
-      const response = await fetchGetAdminListedPropertyDetail(record.id, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log("view listing", response);
+      router.push(`/view/${record.id}`);
     } else if (key === "edit") {
       // router.push(`/edit/${record.id}`);
       try {
-        const response = await fetchChangeListedPropertyStatus(
+        // CHange status
+        // const response = await fetchChangeListedPropertyStatus(
+        //   record.id,
+        //   {
+        //     status: "visible",
+        //   },
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //   }
+        // );
+
+        const response = await fetchChangeListedPropertyPhase(
           record.id,
           {
-            status: "initialOffering",
+            phase: "initial-offering",
           },
           {
             headers: {
