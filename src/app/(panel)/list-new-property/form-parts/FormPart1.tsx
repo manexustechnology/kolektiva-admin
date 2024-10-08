@@ -294,8 +294,8 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                   <option value="" disabled>
                     Select Property Phase
                   </option>
-                  <option value="Phase1">Phase1</option>
-                  <option value="Phase1">Phase2</option>
+                  <option value="upcoming">Upcoming</option>
+                  <option value="initial-offering">Initial Offering</option>
                 </select>
               </div>
             </div>
