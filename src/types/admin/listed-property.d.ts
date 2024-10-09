@@ -23,7 +23,8 @@ export interface AdminListedPropertyResponse {
   latitude: string;
   longitude: string;
   description: string;
-  status: string;
+  phase: ListedPropertyPhase;
+  status: ListedPropertyStatus;
   isFeatured: any;
   isUpcoming: boolean;
   isAftermarket: any;
@@ -35,10 +36,17 @@ export interface AdminListedPropertyResponse {
   propertyData: PropertyData;
 }
 
+export type ListedPropertyStatus = "draft" | "visible" | "hidden";
+
+export type ListedPropertyPhase =
+  | "upcoming"
+  | "initial-offering"
+  | "aftermarket";
+
 export interface ChangeListedPropertyStatus {
-  status: "draft" | "visible" | "hidden";
+  status: ListedPropertyStatus;
 }
 
 export interface ChangeListedPropertyPhase {
-  phase: "upcoming" | "initial-offering" | "aftermarket";
+  phase: ListedPropertyPhase;
 }

@@ -31,7 +31,10 @@ import {
   fetchGetAdminListedPropertyDetail,
 } from "@/fetch/admin/listed-property.fetch";
 import dayjs from "dayjs";
-import { AdminListedPropertyResponse } from "@/types/admin/listed-property";
+import {
+  AdminListedPropertyResponse,
+  ListedPropertyPhase,
+} from "@/types/admin/listed-property";
 import { useQuery } from "@tanstack/react-query";
 
 interface TableParams {
@@ -90,6 +93,19 @@ const ListedPropertyPage: React.FC = () => {
         //   }
         // );
 
+        // edit
+        // const response = await fetchUpdateListedProperty(
+        //   record.id,
+        //   {
+        //     propertyData
+        //   },
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //   }
+        // );
+
         const response = await fetchChangeListedPropertyPhase(
           record.id,
           {
@@ -101,6 +117,7 @@ const ListedPropertyPage: React.FC = () => {
             },
           }
         );
+        console.log(response);
 
         if (response.status === 200 && response.data) {
           console.log("Submission successful", response);
