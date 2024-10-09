@@ -5,11 +5,11 @@ import {
   POST_PROPERTY_LISTING_REQUEST,
 } from "@/constants/api-routes.constants";
 import {
+  AdminPropertyListingRequestRequest,
   AdminPropertyListingRequestResponse,
   ChangePropertyListingRequestStatus,
   GetAdminPropertyListingRequestParams,
 } from "@/types/admin/property-listing-request";
-import { PropertyData } from "@/types/property-data";
 import { ResponseData, ResponseDataPagination } from "@/types/response";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import queryString from "query-string";
@@ -43,7 +43,7 @@ export const fetchGetAdminPropertyListingRequestDetail = async (
 };
 
 export const fetchPostPropertyListingRequest = async (
-  params: PropertyData,
+  params: AdminPropertyListingRequestRequest,
   headers: AxiosRequestConfig
 ): Promise<
   AxiosResponse<ResponseData<AdminPropertyListingRequestResponse>>
@@ -58,7 +58,7 @@ export const fetchPostPropertyListingRequest = async (
 
 export const fetchUpdatePropertyListingRequest = async (
   identifier: string,
-  params: PropertyData,
+  params: AdminPropertyListingRequestRequest,
   headers: AxiosRequestConfig
 ): Promise<
   AxiosResponse<ResponseData<AdminPropertyListingRequestResponse>>

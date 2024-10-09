@@ -20,6 +20,16 @@ export interface AdminPropertyListingRequestResponse {
   updatedAt: Date;
 }
 
+export interface AdminPropertyListingRequestRequest {
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+  priceEstimation: string;
+  status: string;
+  propertyData: PropertyData;
+}
+
 export interface PropertyListingRequestPropertyData {
   landArea: number;
   furniture: string;
