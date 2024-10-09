@@ -65,6 +65,7 @@ export const Sidebar: React.FC<PropsWithChildren<SidebarProps>> = ({
         "flex h-screen transition-all overflow-hidden md:overflow-visible md:w-fit absolute md:relative z-20",
         expanded ? "w-fit" : "w-0"
       )}
+      style={{ position: "sticky", top: 0, height: "100vh" }}
     >
       <nav className="flex flex-col bg-white border-r shadow-sm">
         <div className="p-4 pb-2 flex justify-between items-center">

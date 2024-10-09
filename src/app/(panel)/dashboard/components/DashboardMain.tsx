@@ -20,6 +20,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import PropertyPanel from "./PropertyPanel";
+import UsersPanel from "./UsersPanel";
 
 const DashboardMain: React.FC = () => {
   const router = useRouter();
@@ -46,11 +47,76 @@ const DashboardMain: React.FC = () => {
 
   const dashboardData: DashboardData = {
     property_propertyListed_upcomming: 100,
-    property_propertyListed_ipo: 20,
-    property_propertyListed_aftermarket: 30,
+    property_propertyListed_ipo: 25,
+    property_propertyListed_aftermarket: 45,
+
     property_listingRequest_chart: "",
-    property_latestBuy: [],
-    proeprty_latestSell: [],
+
+    property_latestBuy: [
+      {
+        address: "1234 Elm Street",
+        city: "Springfield",
+        price: "30,000",
+        imageUrl: "/images/test-dashboard-property.png",
+      },
+      {
+        address: "5678 Oak Avenue",
+        city: "Dallas",
+        price: "25,000",
+        imageUrl: "/images/test-dashboard-property.png",
+      },
+      {
+        address: "9101 Pine Road",
+        city: "Miami",
+        price: "35,000",
+        imageUrl: "/images/test-dashboard-property.png",
+      },
+      {
+        address: "2345 Maple Lane",
+        city: "Seattle",
+        price: "40,000",
+        imageUrl: "/images/test-dashboard-property.png",
+      },
+      {
+        address: "6789 Birch Street",
+        city: "Boston",
+        price: "45,000",
+        imageUrl: "/images/test-dashboard-property.png",
+      },
+    ],
+
+    property_latestSell: [
+      {
+        address: "1234 Elm Street",
+        city: "Springfield",
+        price: "30,000",
+        imageUrl: "/images/test-dashboard-property.png",
+      },
+      {
+        address: "5678 Oak Avenue",
+        city: "Dallas",
+        price: "25,000",
+        imageUrl: "/images/test-dashboard-property.png",
+      },
+      {
+        address: "9101 Pine Road",
+        city: "Miami",
+        price: "35,000",
+        imageUrl: "/images/test-dashboard-property.png",
+      },
+      {
+        address: "2345 Maple Lane",
+        city: "Seattle",
+        price: "40,000",
+        imageUrl: "/images/test-dashboard-property.png",
+      },
+      {
+        address: "6789 Birch Street",
+        city: "Boston",
+        price: "45,000",
+        imageUrl: "/images/test-dashboard-property.png",
+      },
+    ],
   };
 
   return (
@@ -85,7 +151,10 @@ const DashboardMain: React.FC = () => {
               <TabPanel px={0} py={4}>
                 <PropertyPanel dashboardData={dashboardData} />
               </TabPanel>
-              <TabPanel px={0} py={4}></TabPanel>
+              <TabPanel px={0} py={4}>
+                {" "}
+                <UsersPanel dashboardData={dashboardData} />
+              </TabPanel>
               <TabPanel px={0} py={4}></TabPanel>
             </TabPanels>
           </Tabs>

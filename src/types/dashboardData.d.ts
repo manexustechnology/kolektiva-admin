@@ -1,3 +1,10 @@
+export interface Property {
+  address: string;
+  city: string;
+  price: string;
+  imageUrl: string;
+}
+
 export interface DashboardData {
   property_propertyListed_upcomming: number;
   property_propertyListed_ipo: number;
@@ -5,6 +12,6 @@ export interface DashboardData {
 
   property_listingRequest_chart: string;
 
-  property_latestBuy: string[];
-  proeprty_latestSell: string[];
+  property_latestBuy: Property[];
+  property_latestSell: Property[];
 }
