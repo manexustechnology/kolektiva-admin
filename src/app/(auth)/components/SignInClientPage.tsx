@@ -34,7 +34,7 @@ const SignInClientPage: React.FC = () => {
   }, []);
 
   if (data) {
-    router.push("/listed-property");
+    router.push("/dashboard");
     return <></>;
   }
 
@@ -51,7 +51,7 @@ const SignInClientPage: React.FC = () => {
                   type="submit"
                   onClick={() =>
                     signIn(provider.id, {
-                      callbackUrl: "/listed-property",
+                      callbackUrl: "/dashboard",
                     })
                   }
                 >

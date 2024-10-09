@@ -11,8 +11,8 @@ export default function Home() {
   useEffect(() => {
     if (router) {
       if (data) {
-        console.log("Redirecting to /listed-property");
-        router.push("/listed-property");
+        console.log("Redirecting to /dashboard");
+        router.push("/dashboard");
       } else {
         router.push("/signin");
       }
