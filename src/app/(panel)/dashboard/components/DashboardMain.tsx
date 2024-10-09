@@ -19,6 +19,7 @@ import {
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import FinancialsPanel from "./FinancialsPanel";
 import PropertyPanel from "./PropertyPanel";
 import UsersPanel from "./UsersPanel";
 
@@ -117,6 +118,69 @@ const DashboardMain: React.FC = () => {
         imageUrl: "/images/test-dashboard-property.png",
       },
     ],
+
+    users_kyc: 200,
+    users_nonKyc: 100,
+    users_investersNum: 2000,
+    users_activeUsers: 1500,
+    users_newUsers: 500,
+    users_topInverstors: [
+      {
+        name: "John Doe",
+        imageUrl: "/images/test-dashboard-user.png",
+        amount: 6900,
+      },
+      {
+        name: "Jane Smith",
+        imageUrl: "/images/test-dashboard-user.png",
+        amount: 6000,
+      },
+      {
+        name: "Robert Brown",
+        imageUrl: "/images/test-dashboard-user.png",
+        amount: 5000,
+      },
+      {
+        name: "Emily Davis",
+        imageUrl: "/images/test-dashboard-user.png",
+        amount: 4600,
+      },
+      {
+        name: "Michael Wilson",
+        imageUrl: "/images/test-dashboard-user.png",
+        amount: 4500,
+      },
+      {
+        name: "Olivia Garcia",
+        imageUrl: "/images/test-dashboard-user.png",
+        amount: 3500,
+      },
+      {
+        name: "Daniel Martinez",
+        imageUrl: "/images/test-dashboard-user.png",
+        amount: 3500,
+      },
+      {
+        name: "Sophia Hernandez",
+        imageUrl: "/images/test-dashboard-user.png",
+        amount: 3000,
+      },
+      {
+        name: "David Johnson",
+        imageUrl: "/images/test-dashboard-user.png",
+        amount: 2600,
+      },
+      {
+        name: "Mia Lee",
+        imageUrl: "/images/test-dashboard-user.png",
+        amount: 2100,
+      },
+      {
+        name: "Tony Smith",
+        imageUrl: "/images/test-dashboard-user.png",
+        amount: 2000,
+      },
+    ],
   };
 
   return (
@@ -155,7 +219,10 @@ const DashboardMain: React.FC = () => {
                 {" "}
                 <UsersPanel dashboardData={dashboardData} />
               </TabPanel>
-              <TabPanel px={0} py={4}></TabPanel>
+              <TabPanel px={0} py={4}>
+                {" "}
+                <FinancialsPanel dashboardData={dashboardData} />
+              </TabPanel>
             </TabPanels>
           </Tabs>
         </div>
