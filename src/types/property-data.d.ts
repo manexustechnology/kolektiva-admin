@@ -1,8 +1,8 @@
 export class PropertyData {
   propertyDetails: {
     propertyStatus: {
-      phase: string;
-      status: string;
+      phase: ListedPropertyPhase;
+      status: ListedPropertyStatus;
       rentalStatus: string;
     };
     issuerDetails: {
