@@ -1,12 +1,14 @@
 "use client";
 
 import SidebarPanel from "@/components/SidebarPanel";
-import { useState, PropsWithChildren } from "react";
+import { useState, useEffect, PropsWithChildren } from "react";
 
 const PanelLayout: React.FC<PropsWithChildren> = ({ children }) => {
-  const [showSidebarMenu, setShowSidebarMenu] = useState(
-    window?.innerWidth >= 768 ? true : false
-  );
+  const [showSidebarMenu, setShowSidebarMenu] = useState(false);
+
+  useEffect(() => {
+    setShowSidebarMenu(window.innerWidth >= 768);
+  }, []);
 
   return (
     <div className="w-full flex">

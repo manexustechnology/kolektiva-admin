@@ -45,14 +45,15 @@ const FormPart3: React.FC<FormPart3Props> = ({ formData, setFormData }) => {
       }));
     }
   };
-
   const handleView = (doc: File | string) => {
     if (typeof doc === "string") {
       window.open(doc, "_blank");
-    } else if (doc instanceof File) {
-      const fileURL = URL.createObjectURL(doc);
-      window.open(fileURL, "_blank");
+      return;
     }
+
+    // If doc is an instance of File
+    const fileURL = URL.createObjectURL(doc);
+    window.open(fileURL, "_blank");
   };
 
   const removeDocument = (index: number) => {
