@@ -39,11 +39,11 @@ const SidebarPanel: React.FC<SidebarPanel> = ({ isShowed, onShow }) => {
               icon={<Buildings size={20} weight="fill" />}
             />
           </Link>
-          <Link href="/property-listing-request">
-            <SidebarItem text="Property Listing Request" />
-          </Link>
           <Link href="/listed-property">
             <SidebarItem text="Listed Property" />
+          </Link>
+          <Link href="/property-listing-request">
+            <SidebarItem text="Property Listing Request" />
           </Link>
           <div className="flex flex-col items-start px-2.5 gap-2.5 w-full h-px">
             <div className="w-full h-px bg-zinc-200 flex-none order-0 self-stretch flex-grow-0"></div>
