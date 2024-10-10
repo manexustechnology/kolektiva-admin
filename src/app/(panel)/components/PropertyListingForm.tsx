@@ -154,13 +154,12 @@ const PropertyListingForm: React.FC = () => {
 
   const [DiscardDraftModalOpen, setDiscardDraftModalOpen] =
     useState<boolean>(false);
-  useEffect(() => {
-    const scrollToTop = () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
 
-    scrollToTop();
-  }, []);
+  const scrollToTop = () => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   const nextStep = () => {
     console.log(formData);
