@@ -7,7 +7,19 @@ const PanelLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const [showSidebarMenu, setShowSidebarMenu] = useState(false);
 
   useEffect(() => {
-    setShowSidebarMenu(window.innerWidth >= 768);
+    const handleResize = () => {
+      if (typeof window !== "undefined") {
+        setShowSidebarMenu(window.innerWidth >= 768);
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   return (
