@@ -11,11 +11,6 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import {
-  ArrowSquareOut,
-  CaretLeft,
-  CaretRight,
-} from "@phosphor-icons/react/dist/ssr";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -31,16 +26,16 @@ const DashboardMain: React.FC = () => {
 
   useEffect(() => {
     setDomLoaded(true);
-    setInterval(() => {
+    const checkLoginInterval = setInterval(() => {
       setFirstCheckLoggedIn(true);
     }, 3000);
+
+    return () => clearInterval(checkLoginInterval);
   }, []);
 
   useEffect(() => {
-    if (router) {
-      if (domLoaded && !session && firstCheckLoggedIn) {
-        router.push("/signin");
-      }
+    if (domLoaded && !session && firstCheckLoggedIn) {
+      router.push("/signin");
     }
   }, [router, session, domLoaded, firstCheckLoggedIn]);
 
