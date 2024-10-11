@@ -375,8 +375,10 @@ const PropertyListingForm: React.FC = () => {
 
       if (response.status === 200 && response.data) {
         console.log("Submission successful", response);
+        router.push("/");
       } else {
         console.log("Submission failed", response);
+        router.push("/");
       }
     } catch (error) {
       console.error("Error submitting property listing:", error);
