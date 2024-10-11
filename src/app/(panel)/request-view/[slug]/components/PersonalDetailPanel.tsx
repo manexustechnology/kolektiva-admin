@@ -105,26 +105,37 @@ const PersonalDetailPanel: React.FC<PersonalDetailPanelProps> = ({
               <p className="text-base font-medium leading-[18px] text-left text-teal-600">
                 <span
                   className="cursor-pointer"
-                  onClick={() =>
-                    window.open(
-                      formData.propertyDetails_propertySummary_googleMapUrl,
-                      "_blank"
-                    )
-                  }
+                  onClick={() => {
+                    if (
+                      typeof window !== "undefined" &&
+                      formData.propertyDetails_propertySummary_googleMapUrl
+                    ) {
+                      window.open(
+                        formData.propertyDetails_propertySummary_googleMapUrl,
+                        "_blank"
+                      );
+                    }
+                  }}
                 >
                   {truncateText(
                     formData.propertyDetails_propertySummary_googleMapUrl,
                     20
                   )}
                 </span>
+
                 <ArrowSquareOut
                   color="black"
-                  onClick={() =>
-                    window.open(
-                      formData.propertyDetails_propertySummary_googleMapUrl,
-                      "_blank"
-                    )
-                  }
+                  onClick={() => {
+                    if (
+                      typeof window !== "undefined" &&
+                      formData.propertyDetails_propertySummary_googleMapUrl
+                    ) {
+                      window.open(
+                        formData.propertyDetails_propertySummary_googleMapUrl,
+                        "_blank"
+                      );
+                    }
+                  }}
                   className="inline cursor-pointer"
                 />
               </p>

@@ -12,22 +12,6 @@ const MarketPanel: React.FC<MarketPanelProps> = ({ formData }) => {
   const isLoading = false;
   const [showModal, setShowModal] = useState(false);
 
-  const handleView = (doc: File | string) => {
-    if (typeof doc === "string") {
-      window.open(doc, "_blank");
-    } else if (doc instanceof File) {
-      const fileURL = URL.createObjectURL(doc);
-      window.open(fileURL, "_blank");
-    }
-  };
-
-  const truncateText = (text: string, maxLength: number) => {
-    if (text.length <= maxLength) return text;
-    const start = text.slice(0, 6);
-    const end = text.slice(-6);
-    return `${start}...${end}`;
-  };
-
   return (
     <div className="flex flex-col gap-6">
       {/* Makets */}

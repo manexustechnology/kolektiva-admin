@@ -13,10 +13,18 @@ const FormPart2: React.FC<FormPart2Props> = ({ formData, setFormData }) => {
     const { name, value } = e.target;
     const numericValue = value === "" ? 0 : Number(value);
 
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: numericValue,
-    }));
+    setFormData((prevData) => {
+      const updatedData = {
+        ...prevData,
+        [name]: numericValue,
+      };
+
+      updatedData.financials_token_tokenValue =
+        updatedData.financials_token_tokenPrice *
+        updatedData.financials_token_tokenSupply;
+
+      return updatedData;
+    });
   };
 
   return (
@@ -131,30 +139,13 @@ const FormPart2: React.FC<FormPart2Props> = ({ formData, setFormData }) => {
           <div className="flex flex-col items-start p-0 gap-1.5 w-full h-[66px]">
             <div className="flex flex-row items-center p-0 gap-0.75">
               <p className="text-sm font-normal text-zinc-700">
-                Token Value <span className="text-zinc-400">*</span>
+                Total Value <span className="text-zinc-400">*</span>
               </p>
-              {formData.errmsg &&
-                (formData.financials_token_tokenValue === 0 ||
-                  isNaN(formData.financials_token_tokenValue)) && (
-                  <span className="text-red-500 text-xs">Required Field</span>
-                )}
-              {formData.financials_token_tokenValue < 0 && (
-                <span className="text-red-500 text-xs">
-                  Enter a number Greater than 0
-                </span>
-              )}
             </div>
             <div className="flex flex-col items-start p-0 gap-1 w-full">
-              <div className="flex items-center bg-[#F4F4F5] border-none rounded-full h-[40px] w-full relative">
-                <input
-                  type="number"
-                  name="financials_token_tokenValue"
-                  value={formData.financials_token_tokenValue}
-                  onChange={handleNumberChange}
-                  className="flex-grow h-full bg-transparent border-none rounded-full pl-3 md:pr-10 focus:outline-none focus:ring-0 focus:border-none"
-                />
-                <span className="text-sm text-[#3F3F46] pr-3">USD</span>
-              </div>
+              <p className="text-base font-medium leading-[18px] text-left">
+                {formData.financials_token_tokenValue} USD
+              </p>
             </div>
           </div>
         </div>

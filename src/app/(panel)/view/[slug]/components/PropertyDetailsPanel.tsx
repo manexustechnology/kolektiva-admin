@@ -33,6 +33,18 @@ const PropertyDetailsPanel: React.FC<PropertyDetailsPanelProps> = ({
     return `${start}...${end}`;
   };
 
+  const openGoogleMap = () => {
+    if (
+      typeof window !== "undefined" &&
+      formData.propertyDetails_propertySummary_googleMapUrl
+    ) {
+      window.open(
+        formData.propertyDetails_propertySummary_googleMapUrl,
+        "_blank"
+      );
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6">
       {/* Property Status */}
@@ -162,15 +174,7 @@ const PropertyDetailsPanel: React.FC<PropertyDetailsPanelProps> = ({
             </div>
             <div className="flex flex-col items-start p-0 gap-1 w-full">
               <p className="text-base font-medium leading-[18px] text-left text-teal-600">
-                <span
-                  className="cursor-pointer"
-                  onClick={() =>
-                    window.open(
-                      formData.propertyDetails_propertySummary_googleMapUrl,
-                      "_blank"
-                    )
-                  }
-                >
+                <span className="cursor-pointer" onClick={openGoogleMap}>
                   {truncateText(
                     formData.propertyDetails_propertySummary_googleMapUrl,
                     20
@@ -178,12 +182,7 @@ const PropertyDetailsPanel: React.FC<PropertyDetailsPanelProps> = ({
                 </span>
                 <ArrowSquareOut
                   color="black"
-                  onClick={() =>
-                    window.open(
-                      formData.propertyDetails_propertySummary_googleMapUrl,
-                      "_blank"
-                    )
-                  }
+                  onClick={openGoogleMap}
                   className="inline cursor-pointer"
                 />
               </p>

@@ -16,7 +16,7 @@ const FormPart4: React.FC<FormPart4Props> = ({ formData, setFormData }) => {
   const handleDescriptionChange = (value: string) => {
     setFormData((prevData) => ({
       ...prevData,
-      markets: value,
+      markets_markets: value,
     }));
   };
 

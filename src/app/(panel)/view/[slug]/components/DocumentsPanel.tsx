@@ -27,10 +27,12 @@ const DocumentsPanel: React.FC<DocumentsPanelProps> = ({ formData }) => {
   const handleView = (doc: File | string) => {
     if (typeof doc === "string") {
       window.open(doc, "_blank");
-    } else if (doc instanceof File) {
-      const fileURL = URL.createObjectURL(doc);
-      window.open(fileURL, "_blank");
+      return;
     }
+
+    // If doc is a File instance
+    const fileURL = URL.createObjectURL(doc);
+    window.open(fileURL, "_blank");
   };
 
   const truncateText = (text: string, maxLength: number) => {

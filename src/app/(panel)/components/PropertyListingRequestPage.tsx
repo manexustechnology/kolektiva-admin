@@ -358,6 +358,18 @@ const PropertyListingRequestPage: React.FC = () => {
         </Dropdown>
       ),
     },
+    {
+      title: "Actions",
+      dataIndex: "",
+      key: "actions",
+      render: (_, record) => (
+        <Eye
+          size={24}
+          className="cursor-pointer"
+          onClick={() => router.push(`/request-view/${record.id}`)}
+        />
+      ),
+    },
   ];
 
   useEffect(() => {
