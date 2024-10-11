@@ -1,18 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import React from "react";
+import dynamic from "next/dynamic";
 import { DashboardData } from "@/types/dashboardData";
-import {
-  CaretCircleDoubleUp,
-  ChartBar,
-  CurrencyDollar,
-  HandCoins,
-  User,
-  UserCheck,
-} from "@phosphor-icons/react/dist/ssr";
-import { ApexOptions } from "apexcharts";
-import ReactApexChart from "react-apexcharts";
+import { HandCoins, User, UserCheck } from "@phosphor-icons/react/dist/ssr";
+
+// Dynamically import ReactApexChart to disable SSR for this component
+const ReactApexChart = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+});
 
 interface UsersPanelProps {
   dashboardData: DashboardData;
@@ -39,7 +36,7 @@ const UsersPanel: React.FC<UsersPanelProps> = ({ dashboardData }) => {
         return `${seriesName} = ${value} Users`;
       },
     },
-    labels: ["KYC", "Non-KYC"],
+    labels,
     colors: ["#F59E0B", "#0D9488"],
   };
 

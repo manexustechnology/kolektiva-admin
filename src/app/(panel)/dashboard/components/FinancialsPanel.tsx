@@ -1,37 +1,33 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import { DashboardData } from "@/types/dashboardData";
-import {
-  CaretCircleDoubleUp,
-  ChartBar,
-  CurrencyDollar,
-  HandCoins,
-  User,
-  UserCheck,
-} from "@phosphor-icons/react/dist/ssr";
 import { ApexOptions } from "apexcharts";
-import ReactApexChart from "react-apexcharts";
+import { User, UserCheck } from "@phosphor-icons/react";
+
+// Dynamically import the chart component with SSR disabled
+const ReactApexChart = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+});
 
 interface FinancialsPanelProps {
   dashboardData: DashboardData;
 }
 
 const FinancialsPanel: React.FC<FinancialsPanelProps> = ({ dashboardData }) => {
-  const [revenueChartSeries, setrevenueChartSeries] = useState<
-    ApexOptions["series"]
-  >([
+  const [revenueChartSeries] = useState<ApexOptions["series"]>([
     {
       name: "From IPO",
       data: Array.from({ length: 30 }, (_, i) => i + 4),
     },
     {
-      name: "From Transctions",
+      name: "From Transactions",
       data: Array.from({ length: 30 }, (_, i) => i + 4),
     },
   ]);
-  const [revenueChartOptions, setrevenueChartOptions] = useState<ApexOptions>({
+
+  const [revenueChartOptions] = useState<ApexOptions>({
     chart: {
       type: "bar",
       height: 350,
@@ -59,16 +55,15 @@ const FinancialsPanel: React.FC<FinancialsPanelProps> = ({ dashboardData }) => {
       bar: {
         horizontal: false,
         borderRadius: 2,
-        borderRadiusApplication: "end", // 'around', 'end'
-        borderRadiusWhenStacked: "last", // 'all', 'last'
+        borderRadiusApplication: "end",
+        borderRadiusWhenStacked: "last",
       },
     },
     xaxis: {
       title: {
         text: "Year",
         style: {
-          //   fontFamily: interGlobalFont.style.fontFamily,
-          fontWeight: 500,
+          fontWeight: 400,
         },
       },
       categories: Array.from({ length: 30 }, (_, i) => (i + 1).toString()),
@@ -87,7 +82,6 @@ const FinancialsPanel: React.FC<FinancialsPanelProps> = ({ dashboardData }) => {
       opacity: 1,
     },
   });
-
   return (
     <div className="flex flex-col items-start p-5 gap-[20px] ">
       {/* Revenue Generated */}
