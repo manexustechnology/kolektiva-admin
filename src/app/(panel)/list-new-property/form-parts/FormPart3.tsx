@@ -46,14 +46,25 @@ const FormPart3: React.FC<FormPart3Props> = ({ formData, setFormData }) => {
     }
   };
   const handleView = (doc: File | string) => {
+    if (typeof window === "undefined") {
+      console.error(
+        "window is not defined. This function cannot run on the server."
+      );
+      return;
+    }
+
     if (typeof doc === "string") {
       window.open(doc, "_blank");
       return;
     }
 
-    // If doc is an instance of File
     const fileURL = URL.createObjectURL(doc);
     window.open(fileURL, "_blank");
+
+    // Revoke the object URL after a short delay
+    setTimeout(() => {
+      URL.revokeObjectURL(fileURL);
+    }, 1000);
   };
 
   const removeDocument = (index: number) => {

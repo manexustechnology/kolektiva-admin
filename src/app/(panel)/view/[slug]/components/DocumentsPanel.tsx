@@ -25,14 +25,24 @@ const DocumentsPanel: React.FC<DocumentsPanelProps> = ({ formData }) => {
   const [showModal, setShowModal] = useState(false);
 
   const handleView = (doc: File | string) => {
+    if (typeof window === "undefined") {
+      console.error(
+        "window is not defined. This function cannot run on the server."
+      );
+      return;
+    }
+
     if (typeof doc === "string") {
       window.open(doc, "_blank");
       return;
     }
 
-    // If doc is a File instance
     const fileURL = URL.createObjectURL(doc);
     window.open(fileURL, "_blank");
+
+    setTimeout(() => {
+      URL.revokeObjectURL(fileURL);
+    }, 1000);
   };
 
   const truncateText = (text: string, maxLength: number) => {
