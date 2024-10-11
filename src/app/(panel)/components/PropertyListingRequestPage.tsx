@@ -362,7 +362,7 @@ const PropertyListingRequestPage: React.FC = () => {
       title: "Actions",
       dataIndex: "",
       key: "actions",
-      render: (_, record) => (
+      render: (_: any, record: { id: string }) => (
         <Eye
           size={24}
           className="cursor-pointer"
