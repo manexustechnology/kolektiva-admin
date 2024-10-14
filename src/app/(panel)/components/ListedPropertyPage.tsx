@@ -106,6 +106,16 @@ const ListedPropertyPage: React.FC = () => {
         //   }
         // );
 
+        // delete
+        // const response = await fetchRemoveListedProperty(
+        //   record.id,
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //   }
+        // );
+
         const response = await fetchChangeListedPropertyPhase(
           record.id,
           {

@@ -5,6 +5,7 @@ import {
   PATCH_CHANGE_LISTED_PROPERTY_STATUS,
   SUBMIT_ADMIN_LISTED_PROPERTY,
   UPDATE_ADMIN_LISTED_PROPERTY,
+  REMOVE_ADMIN_LISTED_PROPERTY,
 } from "@/constants/api-routes.constants";
 import {
   AdminListedPropertyResponse,
@@ -91,6 +92,16 @@ export const fetchUpdateListedProperty = async (
   return await axios.put(
     `${UPDATE_ADMIN_LISTED_PROPERTY}/${identifier}`,
     params,
+    createAxiosConfigWithHeaders(headers)
+  );
+};
+
+export const fetchRemoveListedProperty = async (
+  identifier: string,
+  headers: AxiosRequestConfig
+): Promise<AxiosResponse<ResponseData<AdminListedPropertyResponse>>> => {
+  return await axios.delete(
+    `${REMOVE_ADMIN_LISTED_PROPERTY}/${identifier}`,
     createAxiosConfigWithHeaders(headers)
   );
 };
