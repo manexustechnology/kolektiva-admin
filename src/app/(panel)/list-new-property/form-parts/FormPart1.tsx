@@ -699,7 +699,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                   onChange={handleNumberChange}
                   className="flex-grow h-full bg-transparent border-none rounded-full pl-3 md:pr-10 focus:outline-none focus:ring-0 focus:border-none"
                 />
-                <span className="text-sm text-[#3F3F46] pr-3">m³</span>
+                <span className="text-sm text-[#3F3F46] pr-3">m²</span>
               </div>
             </div>
           </div>
@@ -729,7 +729,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                   onChange={handleNumberChange}
                   className="flex-grow h-full bg-transparent border-none rounded-full pl-3 md:pr-10 focus:outline-none focus:ring-0 focus:border-none"
                 />
-                <span className="text-sm text-[#3F3F46] pr-3">m³</span>
+                <span className="text-sm text-[#3F3F46] pr-3">m²</span>
               </div>
             </div>
           </div>

@@ -268,7 +268,7 @@ const PropertyDetailsPanel: React.FC<PropertyDetailsPanelProps> = ({
             <div className="flex flex-col items-start p-0 gap-1 w-full">
               <div className="flex items-center  border-none rounded-full h-[40px] w-full relative">
                 <p className="text-base font-medium leading-[18px] text-left">
-                  {formData.propertyDetails_propertySummary_landArea} m³
+                  {formData.propertyDetails_propertySummary_landArea} m²
                 </p>
               </div>
             </div>
@@ -282,7 +282,7 @@ const PropertyDetailsPanel: React.FC<PropertyDetailsPanelProps> = ({
             <div className="flex flex-col items-start p-0 gap-1 w-full">
               <div className="flex items-center border-none rounded-full h-[40px] w-full relative">
                 <p className="text-base font-medium leading-[18px] text-left">
-                  {formData.propertyDetails_propertySummary_buildingArea} m³
+                  {formData.propertyDetails_propertySummary_buildingArea} m²
                 </p>
               </div>
             </div>
