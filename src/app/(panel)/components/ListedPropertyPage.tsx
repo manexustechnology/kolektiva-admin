@@ -506,7 +506,7 @@ const ListedPropertyPage: React.FC = () => {
     <div className="">
       <PanelLayout>
         <div className="w-full p-8 gap-6">
-          <h2 className="text-2xl font-bold">Listed Property</h2>
+          <h2 className="text-2xl font-bold">Property List</h2>
           <div className="flex flex-col md:flex-row pt-4 pb-4 relative bg-white rounded-md gap-2">
             <div className="items-center justify-center">
               <div className="flex my-1 justify-center items-center px-3 py-4 w-full h-10 bg-[#F4F4F5] rounded-full">

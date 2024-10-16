@@ -40,7 +40,7 @@ const SidebarPanel: React.FC<SidebarPanel> = ({ isShowed, onShow }) => {
             />
           </Link>
           <Link href="/listed-property">
-            <SidebarItem text="Listed Property" />
+            <SidebarItem text="Property List" />
           </Link>
           <Link href="/property-listing-request">
             <SidebarItem text="Property Listing Request" />

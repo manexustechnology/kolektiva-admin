@@ -334,7 +334,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
           </div>
         </div>
 
-        {/* Rental Status */}
+        {/* Rental Status
         <div className="flex flex-col md:flex-row items-start p-0 gap-1.5 w-full">
           <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
             <div className="flex flex-row items-center p-0 gap-0.75">
@@ -364,7 +364,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Issuer Details */}
