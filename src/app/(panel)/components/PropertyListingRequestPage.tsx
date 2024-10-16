@@ -15,13 +15,14 @@ import {
 import { IMarketFilter } from "@/types/filter";
 import {
   CaretDown,
+  Funnel,
   MagnifyingGlass,
   PencilSimpleLine,
   Plus,
 } from "@phosphor-icons/react/dist/ssr";
 import { Eye } from "@phosphor-icons/react";
 import { SorterResult } from "antd/es/table/interface";
-import { Box, Input, Select } from "@chakra-ui/react";
+import { Box, Button, Input, Select } from "@chakra-ui/react";
 import { generateJWTBearerForAdmin } from "@/utils/jwt";
 import { fetchGetAdminListedProperty } from "@/fetch/admin/listed-property.fetch";
 import dayjs from "dayjs";
@@ -467,13 +468,13 @@ const PropertyListingRequestPage: React.FC = () => {
           <h2 className="text-2xl font-bold">Property Listing Request</h2>
           <div className="flex flex-col md:flex-row pt-4 pb-4 relative bg-white rounded-md gap-2">
             <div className="items-center justify-center">
-              <div className="flex my-1 justify-center items-center px-3 py-4 w-full h-10 bg-[#F4F4F5] rounded-full gap-2">
+              <div className="flex my-1 justify-center items-center px-3 py-4 w-full h-10 bg-[#F4F4F5] rounded-full">
                 {/* Magnifying Glass Icon */}
                 <Box as={MagnifyingGlass} size="16px" color="#3F3F46" />
+
                 {/* Input Field */}
                 <Input
                   id="searchquery"
-                  type="text"
                   placeholder="Search"
                   variant="unstyled"
                   fontSize="sm"
@@ -481,48 +482,57 @@ const PropertyListingRequestPage: React.FC = () => {
                   color="#71717A"
                   border="none"
                   _placeholder={{ color: "#71717A" }}
-                  _focus={{ border: "none" }}
-                  onChange={(e) =>
-                    setSearchFilter((prev) => ({
-                      ...prev,
-                      search: e.target.value,
-                    }))
-                  }
                 />
               </div>
             </div>
             <div className="flex mt-1 mb-1 gap-4">
-              <Select
-                id="filterStatus"
-                placeholder="All Property Type"
-                backgroundColor="#F4F4F5"
-                _hover={{
-                  backgroundColor: "#CCFBF1",
-                }}
-                _focus={{
-                  backgroundColor: "#CCFBF1",
-                }}
-                icon={<CaretDown weight="fill" />}
-                width="200px"
-                rounded={100}
-                marginRight={5}
-                value={searchFilter.status}
-                className="!py-0"
-                onChange={(e) =>
-                  setSearchFilter((prev) => ({
-                    ...prev,
-                    status: e.target.value,
-                  }))
-                }
+              <Button
+                display="flex"
+                flexDirection="row"
+                justifyContent="center"
+                alignItems="center"
+                p="12px 16px"
+                gap="6px"
+                m="0 auto"
+                h="40px"
+                bg="#CCFBF1"
+                borderRadius="100px"
+                _focus={{ boxShadow: "none" }}
+                _hover={{ bg: "teal.500" }}
+                position="relative"
+                overflow="hidden"
+                color="#0F766E"
               >
-                {statusFilterOptions.map((value) => {
-                  return (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  );
-                })}
-              </Select>
+                <Funnel weight="fill" size={16} color="#0F766E" />
+                Filter
+              </Button>
+            </div>
+            <div>
+              <div className="flex mx-1 md:absolute md:right-0 gap-4">
+                <Button
+                  display="flex"
+                  flexDirection="row"
+                  justifyContent="center"
+                  alignItems="center"
+                  p="12px 16px"
+                  gap="6px"
+                  m="0 auto"
+                  w="171px"
+                  h="40px"
+                  bg="#0D9488"
+                  borderRadius="100px"
+                  _focus={{ boxShadow: "none" }}
+                  _hover={{ bg: "teal.400" }}
+                  position="relative"
+                  overflow="hidden"
+                  onClick={() => {
+                    router.push("/list-new-property");
+                  }}
+                >
+                  <Plus size={16} color="#FFFFFF" />
+                  List Property
+                </Button>
+              </div>
             </div>
           </div>
           <Table

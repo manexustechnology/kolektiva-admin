@@ -137,6 +137,8 @@ const ListedPropertyPage: React.FC = () => {
       } catch (error) {
         // Handle the error if necessary
       }
+    } else if (key === "change") {
+      alert("Clicked change");
     }
   };
 
@@ -199,6 +201,15 @@ const ListedPropertyPage: React.FC = () => {
                     style={{ marginRight: "8px" }}
                   />
                   Edit
+                </div>
+              </Menu.Item>
+              <Menu.Item key="change">
+                <div className="flex flex-row items-center">
+                  <PencilSimpleLine
+                    weight="fill"
+                    style={{ marginRight: "8px" }}
+                  />
+                  Change Status
                 </div>
               </Menu.Item>
             </Menu>
