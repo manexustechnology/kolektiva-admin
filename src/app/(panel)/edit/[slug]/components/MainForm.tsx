@@ -171,7 +171,6 @@ const MainForm: React.FC = () => {
         allFieldsFilled =
           !!formData.propertyDetails_propertyStatus_phase &&
           !!formData.propertyDetails_propertyStatus_status &&
-          !!formData.propertyDetails_propertyStatus_rentalStatus &&
           !!formData.propertyDetails_issuerDetails_issuedBy &&
           !!formData.propertyDetails_issuerDetails_name &&
           !!formData.propertyDetails_issuerDetails_phoneNum &&
