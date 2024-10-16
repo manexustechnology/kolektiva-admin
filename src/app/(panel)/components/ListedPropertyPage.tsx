@@ -138,7 +138,59 @@ const ListedPropertyPage: React.FC = () => {
         // Handle the error if necessary
       }
     } else if (key === "change") {
-      alert("Clicked change");
+      if (record.status === "visible") {
+        try {
+          // Change status
+          const response = await fetchChangeListedPropertyStatus(
+            record.id,
+            {
+              status: "hidden",
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          console.log(response);
+
+          if (response.status === 200 && response.data) {
+            console.log("Submission successful", response);
+          } else {
+            console.log("Submission failed", response);
+          }
+        } catch (error) {
+          // Handle the error if necessary
+        }
+      } else if (record.status === "hidden") {
+        try {
+          // Change status
+          const response = await fetchChangeListedPropertyStatus(
+            record.id,
+            {
+              status: "visible",
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          console.log(response);
+
+          if (response.status === 200 && response.data) {
+            console.log("Submission successful", response);
+          } else {
+            console.log("Submission failed", response);
+          }
+        } catch (error) {
+          // Handle the error if necessary
+        }
+      } else {
+        alert("Draft status can't be updated");
+      }
     }
   };
 
