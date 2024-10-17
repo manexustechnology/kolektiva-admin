@@ -2,14 +2,17 @@
 
 import { Button } from "@chakra-ui/react";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FormData } from "@/types/formData";
 import { generateJWTBearerForAdmin } from "@/utils/jwt";
 import { useSession } from "next-auth/react";
 import { uploadFileToCloudinary } from "@/utils/cloudinary";
 import { PropertyData } from "@/types/property-data";
-import { fetchSubmitListedProperty } from "@/fetch/admin/listed-property.fetch";
+import {
+  fetchSubmitListedProperty,
+  fetchUpdateListedProperty,
+} from "@/fetch/admin/listed-property.fetch";
 import {
   ListedPropertyPhase,
   ListedPropertyStatus,
@@ -20,10 +23,12 @@ import FormPart2 from "../form-parts/FormPart2";
 import FormPart3 from "../form-parts/FormPart3";
 import FormPart4 from "../form-parts/FormPart4";
 import DiscardDraftModal from "../modals/DiscardDraftModal";
+import { fetchGetAdminPropertyListingRequestDetail } from "@/fetch/admin/property-listing-request.fetch";
 
 const MainForm: React.FC = () => {
   const { data: session } = useSession();
   const router = useRouter();
+  const { slug } = useParams();
 
   const [isRequestSentModalOpen, setIsRequestSentModal] =
     useState<boolean>(false);
@@ -248,6 +253,147 @@ const MainForm: React.FC = () => {
     scrollToTop();
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetchGetAdminPropertyListingRequestDetail(
+          slug as string,
+          {
+            headers: {
+              Authorization: `Bearer ${await generateJWTBearerForAdmin(
+                session?.user?.email || ""
+              )}`,
+            },
+          }
+        );
+
+        if (response.status === 200 && response.data) {
+          const propertyData: PropertyData = response.data.data
+            .propertyData as any;
+
+          // Convert image URL to File object for 'primary'
+          const imageFilePrimary = await urlToFile(
+            propertyData.propertyDetails.propertyImages.primary
+          );
+          // Convert image URLs to File objects for 'others'
+          const imageFilesOthers = await urlsToFiles(
+            propertyData.propertyDetails.propertyImages.others
+          );
+
+          setFormData({
+            propertyDetails_propertyStatus_phase:
+              propertyData.propertyDetails.propertyStatus.phase,
+            propertyDetails_propertyStatus_status:
+              propertyData.propertyDetails.propertyStatus.status,
+            propertyDetails_propertyStatus_rentalStatus:
+              propertyData.propertyDetails.propertyStatus.rentalStatus,
+            propertyDetails_issuerDetails_issuedBy:
+              propertyData.propertyDetails.issuerDetails.issuedBy,
+            propertyDetails_issuerDetails_name:
+              propertyData.propertyDetails.issuerDetails.name,
+            propertyDetails_issuerDetails_phoneNum:
+              propertyData.propertyDetails.issuerDetails.phoneNum,
+            propertyDetails_issuerDetails_email:
+              propertyData.propertyDetails.issuerDetails.email,
+            propertyDetails_propertySummary_title:
+              propertyData.propertyDetails.propertySummary.title,
+            propertyDetails_propertySummary_googleMapUrl:
+              propertyData.propertyDetails.propertySummary.googleMapUrl,
+            propertyDetails_propertySummary_country:
+              propertyData.propertyDetails.propertySummary.country,
+            propertyDetails_propertySummary_state:
+              propertyData.propertyDetails.propertySummary.state,
+            propertyDetails_propertySummary_city:
+              propertyData.propertyDetails.propertySummary.city,
+            propertyDetails_propertySummary_district:
+              propertyData.propertyDetails.propertySummary.district,
+            propertyDetails_propertySummary_address:
+              propertyData.propertyDetails.propertySummary.address,
+            propertyDetails_propertySummary_landArea:
+              propertyData.propertyDetails.propertySummary.landArea,
+            propertyDetails_propertySummary_buildingArea:
+              propertyData.propertyDetails.propertySummary.buildingArea,
+            propertyDetails_propertySummary_priceEstimation:
+              propertyData.propertyDetails.propertySummary.priceEstimation,
+            propertyDetails_propertyImages_primary: imageFilePrimary,
+            propertyDetails_propertyImages_others: imageFilesOthers,
+            propertyDetails_propertyDetails_planToSell:
+              propertyData.propertyDetails.propertyDetails.planToSell,
+            propertyDetails_propertyDetails_propertyType:
+              propertyData.propertyDetails.propertyDetails.propertyType,
+            propertyDetails_propertyDetails_ownershipStatus:
+              propertyData.propertyDetails.propertyDetails.ownershipStatus,
+            propertyDetails_propertyDetails_propertyCondition:
+              propertyData.propertyDetails.propertyDetails.propertyCondition,
+            propertyDetails_propertyDetails_occupancyStatus:
+              propertyData.propertyDetails.propertyDetails.occupancyStatus,
+            propertyDetails_propertyDetails_propertyManager:
+              propertyData.propertyDetails.propertyDetails.propertyManager,
+            propertyDetails_propertyDetails_furnish:
+              propertyData.propertyDetails.propertyDetails.furnish,
+            propertyDetails_propertyDetails_furniture:
+              propertyData.propertyDetails.propertyDetails.furniture,
+            propertyDetails_propertyDetails_propertyIssues:
+              propertyData.propertyDetails.propertyDetails.propertyIssues,
+            propertyDetails_propertySpecifications_propertyCertificate:
+              propertyData.propertyDetails.propertySpecifications
+                .propertyCertificate,
+            propertyDetails_propertySpecifications_floors:
+              propertyData.propertyDetails.propertySpecifications.floors,
+            propertyDetails_propertySpecifications_waterSupply:
+              propertyData.propertyDetails.propertySpecifications.waterSupply,
+            propertyDetails_propertySpecifications_bedrooms:
+              propertyData.propertyDetails.propertySpecifications.bedrooms,
+            propertyDetails_propertySpecifications_bathrooms:
+              propertyData.propertyDetails.propertySpecifications.bathrooms,
+            propertyDetails_propertySpecifications_garage:
+              propertyData.propertyDetails.propertySpecifications.garage,
+            propertyDetails_propertySpecifications_garden:
+              propertyData.propertyDetails.propertySpecifications.garden,
+            propertyDetails_propertySpecifications_swimPool:
+              propertyData.propertyDetails.propertySpecifications.swimPool,
+            propertyDetails_description:
+              propertyData.propertyDetails.description,
+            financials_token_tokenPrice:
+              propertyData.financials.token.tokenPrice,
+            financials_token_tokenSupply:
+              propertyData.financials.token.tokenSupply,
+            financials_token_tokenValue:
+              propertyData.financials.token.tokenValue,
+            financials_propertyFinancials_furnitureValueEstimation:
+              propertyData.financials.propertyFinancials
+                .furnitureValueEstimation,
+            financials_propertyFinancials_legalAdminCost:
+              propertyData.financials.propertyFinancials.legalAdminCost,
+            financials_propertyFinancials_platformListingFee:
+              propertyData.financials.propertyFinancials.platformListingFee,
+            financials_propertyFinancials_marketingMangementCost:
+              propertyData.financials.propertyFinancials.marketingMangementCost,
+            financials_propertyFinancials_propertyTaxes:
+              propertyData.financials.propertyFinancials.propertyTaxes,
+            financials_propertyFinancials_rentalTaxes:
+              propertyData.financials.propertyFinancials.rentalTaxes,
+            financials_propertyFinancials_rentalYeild:
+              propertyData.financials.propertyFinancials.rentalYeild,
+            documents_documents: propertyData.documents.documents,
+            markets_markets: propertyData.markets.markets,
+            errmsg: propertyData.errmsg,
+            validEmail: propertyData.validEmail,
+            validMap: propertyData.validMap,
+          });
+        } else {
+          console.error("Failed to fetch property data");
+        }
+      } catch (error) {
+        console.error("An error occurred while fetching property data:", error);
+      }
+    };
+
+    if (slug) {
+      fetchData();
+    }
+  }, [slug, session?.user?.email]);
+
   const handleOnClick = async () => {
     // cloudinary max size 10485760
     try {
@@ -366,11 +512,15 @@ const MainForm: React.FC = () => {
       };
 
       // Send the propertyData to the server
-      const response = await fetchSubmitListedProperty(propertyData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetchUpdateListedProperty(
+        slug as string,
+        propertyData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.status === 200 && response.data) {
         console.log("Submission successful", response);
