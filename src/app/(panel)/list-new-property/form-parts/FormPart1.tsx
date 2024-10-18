@@ -325,9 +325,9 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                   <option value="" disabled>
                     Select Property Status
                   </option>
-                  <option value="draft">draft</option>
-                  <option value="hidden">hidden</option>
-                  <option value="visible">visible</option>
+                  <option value="draft">Draft</option>
+                  <option value="hidden">Hidden</option>
+                  <option value="visible">Visible</option>
                 </select>
               </div>
             </div>
@@ -400,7 +400,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                     Select Property Owner
                   </option>
                   <option value="Owner">Owner</option>
-                  <option value="NotOwner">NotOwner</option>
+                  <option value="NotOwner">Not The Owner</option>
                 </select>
               </div>
             </div>
