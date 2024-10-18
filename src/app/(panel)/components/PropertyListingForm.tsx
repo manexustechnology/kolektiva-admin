@@ -20,13 +20,13 @@ import {
   ListedPropertyPhase,
   ListedPropertyStatus,
 } from "@/types/admin/listed-property";
+import toast from "react-hot-toast";
 
 const PropertyListingForm: React.FC = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const [isRequestSentModalOpen, setIsRequestSentModal] =
-    useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
     propertyDetails_propertyStatus_phase: "upcoming",
@@ -249,6 +249,7 @@ const PropertyListingForm: React.FC = () => {
   };
 
   const handleOnClick = async () => {
+    setIsLoading(true);
     // cloudinary max size 10485760
     try {
       const token = await generateJWTBearerForAdmin(session?.user?.email || "");
@@ -373,13 +374,18 @@ const PropertyListingForm: React.FC = () => {
       });
 
       if (response.status === 200 && response.data) {
+        setIsLoading(false);
+        toast.success("Successfully Submitted");
         console.log("Submission successful", response);
-        router.push("/");
+        router.push("/listed-property");
       } else {
+        setIsLoading(false);
+        toast.error("Submission Failed.");
         console.log("Submission failed", response);
-        router.push("/");
+        // router.push("/");
       }
     } catch (error) {
+      toast.error("Error submitting property listing:");
       console.error("Error submitting property listing:", error);
     }
   };
@@ -509,6 +515,8 @@ const PropertyListingForm: React.FC = () => {
                   _hover={{ bg: "teal.700" }}
                   // onClick={() => alert("Sumbit Action Not added")}
                   onClick={handleOnClick}
+                  isLoading={isLoading}
+                  isDisabled={isLoading}
                 >
                   Submit
                 </Button>

@@ -36,6 +36,7 @@ import {
   ListedPropertyPhase,
 } from "@/types/admin/listed-property";
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "react-hot-toast";
 
 interface TableParams {
   pagination?: TablePaginationConfig;
@@ -156,8 +157,10 @@ const ListedPropertyPage: React.FC = () => {
           console.log(response);
 
           if (response.status === 200 && response.data) {
+            toast.success("Status Successfully Changed to Hidden.");
             console.log("Submission successful", response);
           } else {
+            toast.error("Status Change Failed.");
             console.log("Submission failed", response);
           }
         } catch (error) {
@@ -189,7 +192,7 @@ const ListedPropertyPage: React.FC = () => {
           // Handle the error if necessary
         }
       } else {
-        alert("Draft status can't be updated");
+        toast.error("Draft status can't be updated");
       }
     }
   };
