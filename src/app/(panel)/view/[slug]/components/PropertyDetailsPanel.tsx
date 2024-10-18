@@ -24,7 +24,7 @@ const PropertyDetailsPanel: React.FC<PropertyDetailsPanelProps> = ({
   formData,
 }) => {
   const isLoading = false;
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState<number | null>(null);
 
   const truncateText = (text: string, maxLength: number) => {
     if (text.length <= maxLength) return text;
@@ -316,7 +316,7 @@ const PropertyDetailsPanel: React.FC<PropertyDetailsPanelProps> = ({
         {/* Divider */}
         <div className="w-full h-px bg-zinc-200"></div>
 
-        <div className="grid frid-cols-1 md:grid-cols-2 gap-4 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
           {formData.propertyDetails_propertyImages_primary && (
             <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4 gap-3 bg-white shadow-md rounded-md">
               <div className="flex items-center gap-3">
@@ -369,17 +369,15 @@ const PropertyDetailsPanel: React.FC<PropertyDetailsPanelProps> = ({
                   fontWeight="500"
                   _focus={{ bg: "teal.200" }}
                   _hover={{ bg: "teal.200" }}
-                  onClick={() => {
-                    setShowModal(true);
-                  }}
+                  onClick={() => setShowModal(0)} // 0 for primary image
                 >
                   View
                 </Button>
 
                 <MediaShowModal
-                  isOpen={showModal}
+                  isOpen={showModal === 0}
                   image={formData.propertyDetails_propertyImages_primary}
-                  onClose={() => setShowModal(false)}
+                  onClose={() => setShowModal(null)}
                 />
               </div>
             </div>
@@ -392,9 +390,7 @@ const PropertyDetailsPanel: React.FC<PropertyDetailsPanelProps> = ({
                 className="flex flex-col md:flex-row md:items-center md:justify-between p-4 gap-3 bg-white shadow-md rounded-md"
               >
                 <div className="flex items-center gap-3">
-                  {" "}
                   <Image
-                    key={index}
                     src={URL.createObjectURL(image)}
                     alt="Other Image"
                     width={40}
@@ -425,17 +421,15 @@ const PropertyDetailsPanel: React.FC<PropertyDetailsPanelProps> = ({
                       fontWeight="500"
                       _focus={{ bg: "teal.200" }}
                       _hover={{ bg: "teal.200" }}
-                      onClick={() => {
-                        setShowModal(true);
-                      }}
+                      onClick={() => setShowModal(index + 1)} // Offset by 1 for other images
                     >
                       View
                     </Button>
                   </div>
                   <MediaShowModal
-                    isOpen={showModal}
+                    isOpen={showModal === index + 1}
                     image={image}
-                    onClose={() => setShowModal(false)}
+                    onClose={() => setShowModal(null)}
                   />
                 </div>
               </div>
