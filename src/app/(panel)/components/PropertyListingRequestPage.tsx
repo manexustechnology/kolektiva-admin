@@ -33,6 +33,7 @@ import {
   fetchGetAdminPropertyListingRequestDetail,
 } from "@/fetch/admin/property-listing-request.fetch";
 import { AdminPropertyListingRequestResponse } from "@/types/admin/property-listing-request";
+import { toast } from "react-hot-toast";
 
 interface TableParams {
   pagination?: TablePaginationConfig;
@@ -94,7 +95,7 @@ const PropertyListingRequestPage: React.FC = () => {
         }
       );
       console.log("view listing", response);
-    } else if (key === "edit") {
+    } else if (key === "approve") {
       // router.push(`/linkB/${record.id}`);
       try {
         const response = await fetchChangePropertyListingRequestStatus(
@@ -110,6 +111,7 @@ const PropertyListingRequestPage: React.FC = () => {
         );
 
         if (response.status === 200 && response.data) {
+          toast.success("Request Approved");
           console.log("Submission successful", response);
         } else {
           console.log("Submission failed", response);
@@ -138,13 +140,13 @@ const PropertyListingRequestPage: React.FC = () => {
                   View
                 </div>
               </Menu.Item>
-              <Menu.Item key="edit">
+              <Menu.Item key="approve">
                 <div className="flex flex-row items-center">
                   <PencilSimpleLine
                     weight="fill"
                     style={{ marginRight: "8px" }}
                   />
-                  Edit
+                  Approve
                 </div>
               </Menu.Item>
             </Menu>
@@ -172,13 +174,13 @@ const PropertyListingRequestPage: React.FC = () => {
                   View
                 </div>
               </Menu.Item>
-              <Menu.Item key="edit">
+              <Menu.Item key="approve">
                 <div className="flex flex-row items-center">
                   <PencilSimpleLine
                     weight="fill"
                     style={{ marginRight: "8px" }}
                   />
-                  Edit
+                  Approve
                 </div>
               </Menu.Item>
             </Menu>
@@ -206,13 +208,13 @@ const PropertyListingRequestPage: React.FC = () => {
                   View
                 </div>
               </Menu.Item>
-              <Menu.Item key="edit">
+              <Menu.Item key="approve">
                 <div className="flex flex-row items-center">
                   <PencilSimpleLine
                     weight="fill"
                     style={{ marginRight: "8px" }}
                   />
-                  Edit
+                  Approve
                 </div>
               </Menu.Item>
             </Menu>
@@ -240,13 +242,13 @@ const PropertyListingRequestPage: React.FC = () => {
                   View
                 </div>
               </Menu.Item>
-              <Menu.Item key="edit">
+              <Menu.Item key="approve">
                 <div className="flex flex-row items-center">
                   <PencilSimpleLine
                     weight="fill"
                     style={{ marginRight: "8px" }}
                   />
-                  Edit
+                  Approve
                 </div>
               </Menu.Item>
             </Menu>
@@ -274,13 +276,13 @@ const PropertyListingRequestPage: React.FC = () => {
                   View
                 </div>
               </Menu.Item>
-              <Menu.Item key="edit">
+              <Menu.Item key="approve">
                 <div className="flex flex-row items-center">
                   <PencilSimpleLine
                     weight="fill"
                     style={{ marginRight: "8px" }}
                   />
-                  Edit
+                  Approve
                 </div>
               </Menu.Item>
             </Menu>
@@ -308,13 +310,13 @@ const PropertyListingRequestPage: React.FC = () => {
                   View
                 </div>
               </Menu.Item>
-              <Menu.Item key="edit">
+              <Menu.Item key="approve">
                 <div className="flex flex-row items-center">
                   <PencilSimpleLine
                     weight="fill"
                     style={{ marginRight: "8px" }}
                   />
-                  Edit
+                  Approve
                 </div>
               </Menu.Item>
             </Menu>
@@ -342,13 +344,13 @@ const PropertyListingRequestPage: React.FC = () => {
                   View
                 </div>
               </Menu.Item>
-              <Menu.Item key="edit">
+              <Menu.Item key="approve">
                 <div className="flex flex-row items-center">
                   <PencilSimpleLine
                     weight="fill"
                     style={{ marginRight: "8px" }}
                   />
-                  Edit
+                  Approve
                 </div>
               </Menu.Item>
             </Menu>
