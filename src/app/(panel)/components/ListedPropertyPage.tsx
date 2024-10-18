@@ -79,7 +79,7 @@ const ListedPropertyPage: React.FC = () => {
     if (key === "view") {
       router.push(`/view/${record.id}`);
     } else if (key === "edit") {
-      // router.push(`/edit/${record.id}`);
+      router.push(`/edit/${record.id}`);
       try {
         // CHange status
         // const response = await fetchChangeListedPropertyStatus(
