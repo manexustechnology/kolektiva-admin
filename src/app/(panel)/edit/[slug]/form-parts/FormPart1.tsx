@@ -850,6 +850,18 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                   )}
                 </span>
                 <CheckCircle weight="fill" color="#0D9488" />
+                <Box
+                  backgroundColor="#F0FDFA"
+                  color="#0D9488"
+                  padding="2px 8px"
+                  borderWidth="1px"
+                  borderRadius="full"
+                  borderColor="#0D9488"
+                  fontSize="xs"
+                  zIndex={10}
+                >
+                  Primary
+                </Box>
               </div>
               <span className="md:hidden text-sm font-medium text-[#3F3F46]">
                 {truncateText(
@@ -876,6 +888,23 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                   }}
                 >
                   View
+                </Button>
+                <Button
+                  height="40px"
+                  padding="12px 16px"
+                  bg="#F4F4F5"
+                  boxShadow=""
+                  borderRadius="full"
+                  color="#3F3F46"
+                  fontSize="14px"
+                  fontWeight="500"
+                  _focus={{ bg: "teal.200" }}
+                  _hover={{ bg: "teal.200" }}
+                  onClick={() => {
+                    removePrimaryImage();
+                  }}
+                >
+                  <Trash weight="fill" />
                 </Button>
 
                 <MediaShowModal
@@ -914,6 +943,21 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
 
                 <div className="md:ml-auto flex md:items-end gap-1 flex-col md:flex-row">
                   <Button
+                    height="40px"
+                    padding="12px 16px"
+                    bg="#F4F4F5"
+                    boxShadow=""
+                    borderRadius="full"
+                    color="#3F3F46"
+                    fontSize="14px"
+                    fontWeight="500"
+                    _focus={{ bg: "teal.200" }}
+                    _hover={{ bg: "teal.200" }}
+                    onClick={() => swapImage(index)}
+                  >
+                    Set as Primary
+                  </Button>
+                  <Button
                     leftIcon={<Eye weight="fill" />}
                     height="40px"
                     padding="12px 16px"
@@ -930,6 +974,23 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                     }}
                   >
                     View
+                  </Button>
+                  <Button
+                    height="40px"
+                    padding="12px 16px"
+                    bg="#F4F4F5"
+                    boxShadow=""
+                    borderRadius="full"
+                    color="#3F3F46"
+                    fontSize="14px"
+                    fontWeight="500"
+                    _focus={{ bg: "teal.200" }}
+                    _hover={{ bg: "teal.200" }}
+                    onClick={() => {
+                      removeImage(index);
+                    }}
+                  >
+                    <Trash weight="fill" />
                   </Button>
 
                   <MediaShowModal
