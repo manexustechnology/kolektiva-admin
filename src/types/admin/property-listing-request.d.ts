@@ -26,7 +26,7 @@ export interface AdminPropertyListingRequestRequest {
   email: string;
   address: string;
   priceEstimation: string;
-  status: string;
+  status: ListingRequestStatus;
   propertyData: PropertyData;
 }
 
@@ -44,7 +44,13 @@ export interface PropertyListingRequestPropertyData {
   includedFurniture: string;
   propertyCondition: string;
 }
+export type ListingRequestStatus =
+  | "pending"
+  | "oncheck"
+  | "approved"
+  | "rejected"
+  | "archived";
 
 export interface ChangePropertyListingRequestStatus {
-  status: "pending" | "oncheck" | "approved" | "rejected" | "archived";
+  status: ListingRequestStatus;
 }

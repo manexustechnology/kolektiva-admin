@@ -24,9 +24,18 @@ import PropertyDetailPanel from "./PropertyDetailPanel";
 import RejectRequestModal from "../modals/RejectRequestModal";
 import ApproveRequestModal from "../modals/ApproveRequestModal";
 import { generateJWTBearerForAdmin } from "@/utils/jwt";
-import { fetchGetAdminPropertyListingRequestDetail } from "@/fetch/admin/property-listing-request.fetch";
+import {
+	fetchChangePropertyListingRequestStatus,
+	fetchGetAdminPropertyListingRequestDetail,
+	fetchUpdatePropertyListingRequest,
+} from "@/fetch/admin/property-listing-request.fetch";
 import { PropertyData } from "@/types/property-data";
 import { urlsToFiles, urlToFile } from "@/utils/helper";
+import {
+	ListedPropertyPhase,
+	ListedPropertyStatus,
+} from "@/types/admin/listed-property";
+import { uploadFileToCloudinary } from "@/utils/cloudinary";
 
 const MainView: React.FC = () => {
 	const router = useRouter();
@@ -316,6 +325,178 @@ const MainView: React.FC = () => {
 			}
 		}
 	}, [router, session, domLoaded, firstCheckLoggedIn]);
+
+	const handleUpdateOnClick = async () => {
+		// cloudinary max size 10485760
+		try {
+			const token = await generateJWTBearerForAdmin(session?.user?.email || "");
+			const title = formData.propertyDetails_propertySummary_title;
+			const propertyData: PropertyData = {
+				propertyDetails: {
+					propertyStatus: {
+						phase:
+							formData.propertyDetails_propertyStatus_phase as ListedPropertyPhase,
+						status:
+							formData.propertyDetails_propertyStatus_status as ListedPropertyStatus,
+						rentalStatus: formData.propertyDetails_propertyStatus_rentalStatus,
+					},
+					issuerDetails: {
+						issuedBy: formData.propertyDetails_issuerDetails_issuedBy,
+						name: formData.propertyDetails_issuerDetails_name,
+						phoneNum: formData.propertyDetails_issuerDetails_phoneNum,
+						email: formData.propertyDetails_issuerDetails_email,
+					},
+					propertySummary: {
+						title: formData.propertyDetails_propertySummary_title,
+						googleMapUrl: formData.propertyDetails_propertySummary_googleMapUrl,
+						country: formData.propertyDetails_propertySummary_country,
+						state: formData.propertyDetails_propertySummary_state,
+						city: formData.propertyDetails_propertySummary_city,
+						district: formData.propertyDetails_propertySummary_district,
+						address: formData.propertyDetails_propertySummary_address,
+						landArea: formData.propertyDetails_propertySummary_landArea,
+						buildingArea: formData.propertyDetails_propertySummary_buildingArea,
+						priceEstimation:
+							formData.propertyDetails_propertySummary_priceEstimation,
+					},
+					propertyImages: {
+						primary:
+							formData.propertyDetails_propertyImages_primary instanceof File
+								? await uploadFileToCloudinary(
+										formData.propertyDetails_propertyImages_primary,
+										`${title}/images`
+								  )
+								: formData.propertyDetails_propertyImages_primary,
+						others: await Promise.all(
+							formData.propertyDetails_propertyImages_others.map(async (item) =>
+								item instanceof File
+									? await uploadFileToCloudinary(item, `${title}/images`)
+									: item
+							)
+						),
+					},
+					propertyDetails: {
+						planToSell: formData.propertyDetails_propertyDetails_planToSell,
+						propertyType: formData.propertyDetails_propertyDetails_propertyType,
+						ownershipStatus:
+							formData.propertyDetails_propertyDetails_ownershipStatus,
+						propertyCondition:
+							formData.propertyDetails_propertyDetails_propertyCondition,
+						occupancyStatus:
+							formData.propertyDetails_propertyDetails_occupancyStatus,
+						propertyManager:
+							formData.propertyDetails_propertyDetails_propertyManager,
+						furnish: formData.propertyDetails_propertyDetails_furnish,
+						furniture: formData.propertyDetails_propertyDetails_furniture,
+						propertyIssues:
+							formData.propertyDetails_propertyDetails_propertyIssues,
+					},
+					propertySpecifications: {
+						propertyCertificate:
+							formData.propertyDetails_propertySpecifications_propertyCertificate,
+						floors: formData.propertyDetails_propertySpecifications_floors,
+						waterSupply:
+							formData.propertyDetails_propertySpecifications_waterSupply,
+						bedrooms: formData.propertyDetails_propertySpecifications_bedrooms,
+						bathrooms:
+							formData.propertyDetails_propertySpecifications_bathrooms,
+						garage: formData.propertyDetails_propertySpecifications_garage,
+						garden: formData.propertyDetails_propertySpecifications_garden,
+						swimPool: formData.propertyDetails_propertySpecifications_swimPool,
+					},
+					description: formData.propertyDetails_description,
+				},
+				financials: {
+					token: {
+						tokenPrice: formData.financials_token_tokenPrice,
+						tokenSupply: formData.financials_token_tokenSupply,
+						tokenValue: formData.financials_token_tokenValue,
+					},
+					propertyFinancials: {
+						furnitureValueEstimation:
+							formData.financials_propertyFinancials_furnitureValueEstimation,
+						legalAdminCost:
+							formData.financials_propertyFinancials_legalAdminCost,
+						platformListingFee:
+							formData.financials_propertyFinancials_platformListingFee,
+						marketingMangementCost:
+							formData.financials_propertyFinancials_marketingMangementCost,
+						propertyTaxes: formData.financials_propertyFinancials_propertyTaxes,
+						rentalTaxes: formData.financials_propertyFinancials_rentalTaxes,
+						rentalYeild: formData.financials_propertyFinancials_rentalYeild,
+					},
+				},
+				documents: {
+					documents: await Promise.all(
+						formData.documents_documents.map(async (item) =>
+							item instanceof File
+								? await uploadFileToCloudinary(item, `${title}/documents`)
+								: item
+						)
+					),
+				},
+				markets: {
+					markets: formData.markets_markets,
+				},
+				errmsg: formData.errmsg,
+				validEmail: formData.validEmail,
+				validMap: formData.validMap,
+			};
+
+			// Send the propertyData to the server
+			const response = await fetchUpdatePropertyListingRequest(
+				slug as string,
+				{
+					name: propertyData.propertyDetails.propertySummary.title,
+					phone: propertyData.propertyDetails.issuerDetails.phoneNum,
+					email: propertyData.propertyDetails.issuerDetails.email,
+					address: propertyData.propertyDetails.propertySummary.address,
+					status: "approved", // property listing status
+					priceEstimation:
+						formData.propertyDetails_propertySummary_priceEstimation.toString(),
+					propertyData,
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			if (response.status === 200 && response.data) {
+				console.log("Submission successful", response);
+				router.push("/");
+			} else {
+				console.log("Submission failed", response);
+				router.push("/");
+			}
+		} catch (error) {
+			console.error("Error submitting property listing:", error);
+		}
+	};
+
+	const handleChangeStatus = async () => {
+		const token = await generateJWTBearerForAdmin(session?.user?.email || "");
+		const response = await fetchChangePropertyListingRequestStatus(
+			slug as string,
+			{
+				status: "approved", // property listing status
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		);
+
+		if (response.status === 200 && response.data) {
+			console.log("Submission successful", response);
+			router.push("/");
+		} else {
+			console.log("Submission failed", response);
+			router.push("/");
+		}
+	};
 
 	const [tabIndex, setTabIndex] = useState(0);
 	const [rejectRequestModalOpen, RejectRequestModalOpen] =

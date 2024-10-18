@@ -9,7 +9,10 @@ import { generateJWTBearerForAdmin } from "@/utils/jwt";
 import { useSession } from "next-auth/react";
 import { uploadFileToCloudinary } from "@/utils/cloudinary";
 import { PropertyData } from "@/types/property-data";
-import { fetchUpdateListedProperty } from "@/fetch/admin/listed-property.fetch";
+import {
+	fetchGetAdminListedPropertyDetail,
+	fetchUpdateListedProperty,
+} from "@/fetch/admin/listed-property.fetch";
 import {
 	ListedPropertyPhase,
 	ListedPropertyStatus,
@@ -20,7 +23,6 @@ import FormPart2 from "../form-parts/FormPart2";
 import FormPart3 from "../form-parts/FormPart3";
 import FormPart4 from "../form-parts/FormPart4";
 import DiscardDraftModal from "../modals/DiscardDraftModal";
-import { fetchGetAdminPropertyListingRequestDetail } from "@/fetch/admin/property-listing-request.fetch";
 import { urlsToFiles, urlToFile } from "@/utils/helper";
 
 const MainForm: React.FC = () => {
@@ -254,7 +256,7 @@ const MainForm: React.FC = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await fetchGetAdminPropertyListingRequestDetail(
+				const response = await fetchGetAdminListedPropertyDetail(
 					slug as string,
 					{
 						headers: {
