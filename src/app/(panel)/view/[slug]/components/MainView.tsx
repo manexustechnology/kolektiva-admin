@@ -26,6 +26,7 @@ import PropertyDeletionPanel from "./PropertyDeletionPanel";
 import { fetchGetAdminListedPropertyDetail } from "@/fetch/admin/listed-property.fetch";
 import { PropertyData } from "@/types/property-data";
 import { generateJWTBearerForAdmin } from "@/utils/jwt";
+import { urlsToFiles, urlToFile } from "@/utils/helper";
 
 const MainView: React.FC = () => {
   const router = useRouter();
@@ -106,18 +107,23 @@ const MainView: React.FC = () => {
           }
         );
 
+        console.log("property", response);
+
         if (response.status === 200 && response.data) {
           const propertyData: PropertyData = response.data.data
             .propertyData as any;
+          const propertyImages = propertyData.propertyDetails.propertyImages;
 
           // Convert image URL to File object for 'primary'
-          const imageFilePrimary = await urlToFile(
-            propertyData.propertyDetails.propertyImages.primary
-          );
+          const imageFilePrimary = propertyImages.primary
+            ? await urlToFile(propertyImages.primary)
+            : null;
           // Convert image URLs to File objects for 'others'
-          const imageFilesOthers = await urlsToFiles(
-            propertyData.propertyDetails.propertyImages.others
-          );
+          const imageFilesOthers = propertyImages.others
+            ? await urlsToFiles(
+                propertyData.propertyDetails.propertyImages.others
+              )
+            : [];
 
           setFormData({
             propertyDetails_propertyStatus_phase:
@@ -232,19 +238,6 @@ const MainView: React.FC = () => {
       fetchData();
     }
   }, [slug, session?.user?.email]);
-
-  // Helper function to convert image URLs to File objects
-  async function urlToFile(url: string): Promise<File> {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return new File([blob], url.split("/").pop() || "image.jpg", {
-      type: blob.type,
-    });
-  }
-
-  async function urlsToFiles(urls: string[]): Promise<File[]> {
-    return Promise.all(urls.map((url) => urlToFile(url)));
-  }
 
   useEffect(() => {
     setDomLoaded(true);

@@ -15,15 +15,18 @@ import { Trash } from "@phosphor-icons/react/dist/ssr";
 interface PropertyDeleteModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onConfirm: () => Promise<void>;
 }
 
 const PropertyDeleteModal: React.FC<PropertyDeleteModalProps> = ({
   isOpen,
   onClose,
+  onConfirm,
 }: PropertyDeleteModalProps) => {
   const router = useRouter();
 
-  const onDelete = () => {
+  const handleConfirm = async () => {
+    await onConfirm();
     router.push("/");
   };
 
@@ -48,7 +51,7 @@ const PropertyDeleteModal: React.FC<PropertyDeleteModalProps> = ({
               border="1px"
               borderRadius="full"
               flex="1"
-              onClick={() => onDelete()}
+              onClick={handleConfirm}
               colorScheme="red"
             >
               <Trash size={20} className="mr-2" />

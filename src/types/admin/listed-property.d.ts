@@ -36,11 +36,13 @@ export interface AdminListedPropertyResponse {
   propertyData: PropertyData;
 }
 
-export type ListedPropertyStatus = "draft" | "visible" | "hidden";
+export type ListedPropertyStatus = "visible" | "hidden";
 
 export type ListedPropertyPhase =
+  | "draft"
   | "upcoming"
   | "initial-offering"
+  | "settlement"
   | "aftermarket";
 
 export interface ChangeListedPropertyStatus {

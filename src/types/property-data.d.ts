@@ -1,3 +1,8 @@
+import {
+  ListedPropertyPhase,
+  ListedPropertyStatus,
+} from "./admin/listed-property";
+
 export class PropertyData {
   propertyDetails: {
     propertyStatus: {
