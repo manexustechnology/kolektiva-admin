@@ -373,7 +373,10 @@ const PropertyListingForm: React.FC = () => {
         },
       });
 
-      if (response.status === 200 && response.data) {
+      if (
+        (response.status === 200 || response.status === 201) &&
+        response.data
+      ) {
         setIsLoading(false);
         toast.success("Successfully Submitted");
         console.log("Submission successful", response);

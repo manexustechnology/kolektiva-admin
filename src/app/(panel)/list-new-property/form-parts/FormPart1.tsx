@@ -8,9 +8,10 @@ import "react-phone-input-2/lib/style.css";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { CheckCircle, Trash } from "@phosphor-icons/react/dist/ssr";
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, Toast } from "@chakra-ui/react";
 import { Eye } from "@phosphor-icons/react";
 import MediaShowModal from "../modals/MediaShowModal";
+import toast from "react-hot-toast";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -21,7 +22,7 @@ interface FormPart1Props {
 
 const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
   const isLoading = false;
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState<number | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -144,6 +145,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
         };
       }
     });
+    toast.success("Image Uploaded Successfully");
   };
 
   const swapImage = (index: number) => {
@@ -166,6 +168,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
         propertyDetails_propertyImages_others: newOthers,
       };
     });
+    toast.success("New Primary Image Set");
   };
 
   const removeImage = (index: number) => {
@@ -179,6 +182,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
         propertyDetails_propertyImages_others: newOthers,
       };
     });
+    toast.success("Image Removed Successfully");
   };
 
   const removePrimaryImage = () => {
@@ -186,6 +190,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
       ...prevData,
       propertyDetails_propertyImages_primary: null,
     }));
+    toast.success("Image Removed Successfully");
   };
 
   const handleDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -830,7 +835,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
             </span>
           )}
 
-        <div className="grid frid-cols-1 md:grid-cols-2 gap-4 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
           {formData.propertyDetails_propertyImages_primary && (
             <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4 gap-3 bg-white shadow-md rounded-md">
               <div className="flex items-center gap-3">
@@ -884,12 +889,11 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                   _focus={{ bg: "teal.200" }}
                   _hover={{ bg: "teal.200" }}
                   onClick={() => {
-                    setShowModal(true);
+                    setShowModal(0); // For primary image
                   }}
                 >
                   View
                 </Button>
-
                 <Button
                   height="40px"
                   padding="12px 16px"
@@ -909,9 +913,9 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                 </Button>
 
                 <MediaShowModal
-                  isOpen={showModal}
+                  isOpen={showModal === 0} // Check if primary image modal should be open
                   image={formData.propertyDetails_propertyImages_primary}
-                  onClose={() => setShowModal(false)}
+                  onClose={() => setShowModal(null)}
                 />
               </div>
             </div>
@@ -924,7 +928,6 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                 className="flex flex-col md:flex-row md:items-center md:justify-between p-4 gap-3 bg-white shadow-md rounded-md"
               >
                 <div className="flex items-center gap-3">
-                  {" "}
                   <Image
                     key={index}
                     src={URL.createObjectURL(image)}
@@ -959,47 +962,46 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                   >
                     Set as Primary
                   </Button>
-                  <div className="flex justify-center gap-1">
-                    <Button
-                      leftIcon={<Eye weight="fill" />}
-                      height="40px"
-                      padding="12px 16px"
-                      bg="#F4F4F5"
-                      boxShadow=""
-                      borderRadius="full"
-                      color="#3F3F46"
-                      fontSize="14px"
-                      fontWeight="500"
-                      _focus={{ bg: "teal.200" }}
-                      _hover={{ bg: "teal.200" }}
-                      onClick={() => {
-                        setShowModal(true);
-                      }}
-                    >
-                      View
-                    </Button>
-                    <Button
-                      height="40px"
-                      padding="12px 16px"
-                      bg="#F4F4F5"
-                      boxShadow=""
-                      borderRadius="full"
-                      color="#3F3F46"
-                      fontSize="14px"
-                      fontWeight="500"
-                      _focus={{ bg: "teal.200" }}
-                      _hover={{ bg: "teal.200" }}
-                      onClick={() => {
-                        removeImage(index);
-                      }}
-                    >
-                      <Trash weight="fill" />
-                    </Button>
-                  </div>
+                  <Button
+                    leftIcon={<Eye weight="fill" />}
+                    height="40px"
+                    padding="12px 16px"
+                    bg="#F4F4F5"
+                    boxShadow=""
+                    borderRadius="full"
+                    color="#3F3F46"
+                    fontSize="14px"
+                    fontWeight="500"
+                    _focus={{ bg: "teal.200" }}
+                    _hover={{ bg: "teal.200" }}
+                    onClick={() => {
+                      setShowModal(index + 1); // +1 to differentiate from primary image modal
+                    }}
+                  >
+                    View
+                  </Button>
+                  <Button
+                    height="40px"
+                    padding="12px 16px"
+                    bg="#F4F4F5"
+                    boxShadow=""
+                    borderRadius="full"
+                    color="#3F3F46"
+                    fontSize="14px"
+                    fontWeight="500"
+                    _focus={{ bg: "teal.200" }}
+                    _hover={{ bg: "teal.200" }}
+                    onClick={() => {
+                      removeImage(index);
+                    }}
+                  >
+                    <Trash weight="fill" />
+                  </Button>
+
                   <MediaShowModal
-                    isOpen={showModal}
+                    isOpen={showModal === index + 1} // Check if other image modal should be open
                     image={image}
-                    onClose={() => setShowModal(false)}
+                    onClose={() => setShowModal(null)}
                   />
                 </div>
               </div>
@@ -1616,7 +1618,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
       </div>
 
       {/* Description */}
-      <div className="flex flex-col items-start p-4 gap-5 w-full bg-white shadow-md rounded-lg md:h-[240px]">
+      <div className="flex flex-col items-start p-4 gap-5 w-full bg-white shadow-md rounded-lg md:min-h-[240px]">
         {/* Title */}
         <p className="text-lg font-medium text-zinc-500">
           Description{" "}
