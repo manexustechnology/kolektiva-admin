@@ -14,7 +14,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <SessionProvider>
       <ChakraProvider theme={chakraTheme}>
         <AntdRegistry>
-          <Toaster />
+          <Toaster position="top-right" />
           <QueryClientProvider client={queryClient}>
             {children}
           </QueryClientProvider>

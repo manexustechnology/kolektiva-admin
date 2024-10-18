@@ -12,6 +12,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@chakra-ui/react";
 import InserLinkModal from "../modals/InserLinkModal";
+import { toast } from "react-hot-toast";
 
 interface FormPart3Props {
   formData: FormData;
@@ -44,6 +45,7 @@ const FormPart3: React.FC<FormPart3Props> = ({ formData, setFormData }) => {
         documents_documents: [...prev.documents_documents, ...pdfFiles],
       }));
     }
+    toast.success("Uploaded File Successfully");
   };
   const handleView = (doc: File | string) => {
     if (typeof window === "undefined") {
@@ -74,6 +76,7 @@ const FormPart3: React.FC<FormPart3Props> = ({ formData, setFormData }) => {
         (_, i) => i !== index
       ),
     }));
+    toast.success("Removed File Successfully");
   };
 
   const truncateText = (text: string, maxLength: number) => {

@@ -8,9 +8,10 @@ import "react-phone-input-2/lib/style.css";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { CheckCircle, Trash } from "@phosphor-icons/react/dist/ssr";
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, Toast } from "@chakra-ui/react";
 import { Eye } from "@phosphor-icons/react";
 import MediaShowModal from "../modals/MediaShowModal";
+import toast from "react-hot-toast";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -144,6 +145,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
         };
       }
     });
+    toast.success("Image Uploaded Successfully");
   };
 
   const swapImage = (index: number) => {
@@ -166,6 +168,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
         propertyDetails_propertyImages_others: newOthers,
       };
     });
+    toast.success("New Primary Image Set");
   };
 
   const removeImage = (index: number) => {
@@ -179,6 +182,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
         propertyDetails_propertyImages_others: newOthers,
       };
     });
+    toast.success("Image Removed Successfully");
   };
 
   const removePrimaryImage = () => {
@@ -186,6 +190,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
       ...prevData,
       propertyDetails_propertyImages_primary: null,
     }));
+    toast.success("Image Removed Successfully");
   };
 
   const handleDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -1613,7 +1618,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
       </div>
 
       {/* Description */}
-      <div className="flex flex-col items-start p-4 gap-5 w-full bg-white shadow-md rounded-lg md:h-[240px]">
+      <div className="flex flex-col items-start p-4 gap-5 w-full bg-white shadow-md rounded-lg md:min-h-[240px]">
         {/* Title */}
         <p className="text-lg font-medium text-zinc-500">
           Description{" "}
