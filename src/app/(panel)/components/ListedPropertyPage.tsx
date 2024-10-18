@@ -80,64 +80,64 @@ const ListedPropertyPage: React.FC = () => {
       router.push(`/view/${record.id}`);
     } else if (key === "edit") {
       router.push(`/edit/${record.id}`);
-      // try {
-      // CHange status
-      // const response = await fetchChangeListedPropertyStatus(
-      //   record.id,
-      //   {
-      //     status: "visible",
-      //   },
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   }
-      // );
+      try {
+        // CHange status
+        // const response = await fetchChangeListedPropertyStatus(
+        //   record.id,
+        //   {
+        //     status: "visible",
+        //   },
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //   }
+        // );
 
-      // edit
-      // const response = await fetchUpdateListedProperty(
-      //   record.id,
-      //   {
-      //     propertyData
-      //   },
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   }
-      // );
+        // edit
+        // const response = await fetchUpdateListedProperty(
+        //   record.id,
+        //   {
+        //     propertyData
+        //   },
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //   }
+        // );
 
-      // delete
-      // const response = await fetchRemoveListedProperty(
-      //   record.id,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   }
-      // );
+        // delete
+        // const response = await fetchRemoveListedProperty(
+        //   record.id,
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //   }
+        // );
 
-      //   const response = await fetchChangeListedPropertyPhase(
-      //     record.id,
-      //     {
-      //       phase: "initial-offering",
-      //     },
-      //     {
-      //       headers: {
-      //         Authorization: `Bearer ${token}`,
-      //       },
-      //     }
-      //   );
-      //   console.log(response);
+        const response = await fetchChangeListedPropertyPhase(
+          record.id,
+          {
+            phase: "initial-offering",
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response);
 
-      //   if (response.status === 200 && response.data) {
-      //     console.log("Submission successful", response);
-      //   } else {
-      //     console.log("Submission failed", response);
-      //   }
-      // } catch (error) {
-      //   // Handle the error if necessary
-      // }
+        if (response.status === 200 && response.data) {
+          console.log("Submission successful", response);
+        } else {
+          console.log("Submission failed", response);
+        }
+      } catch (error) {
+        // Handle the error if necessary
+      }
     } else if (key === "change") {
       if (record.status === "visible") {
         try {
