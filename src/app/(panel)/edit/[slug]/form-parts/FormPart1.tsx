@@ -1451,7 +1451,8 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
         <div className="flex flex-col items-start p-0 gap-1.5 h-auto w-full">
           <div className="flex flex-row items-center p-0 gap-0.75">
             <p className="text-sm font-normal text-zinc-700">
-              Any furniture will be included on sale? (Add "," to add tag)
+              Any furniture will be included on sale? (Add &quot;,&quot; to add
+              tag)
             </p>
           </div>
           <div className="flex flex-col items-start p-0 gap-1 w-full">

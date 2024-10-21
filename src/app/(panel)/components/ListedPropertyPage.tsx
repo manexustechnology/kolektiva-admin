@@ -278,6 +278,40 @@ const ListedPropertyPage: React.FC = () => {
       ),
     },
     {
+      title: "Property Title",
+      dataIndex: "tokenName",
+      key: "tokenName",
+      render: (text: string, record: any) => (
+        <Dropdown
+          overlay={
+            <Menu
+              onClick={({ key }) => handleMenuClick(key, record)}
+              style={{ width: "140px" }}
+            >
+              <Menu.Item key="view">
+                <div className="flex flex-row items-center">
+                  <Eye weight="fill" style={{ marginRight: "8px" }} />
+                  View
+                </div>
+              </Menu.Item>
+              <Menu.Item key="edit">
+                <div className="flex flex-row items-center">
+                  <PencilSimpleLine
+                    weight="fill"
+                    style={{ marginRight: "8px" }}
+                  />
+                  Edit
+                </div>
+              </Menu.Item>
+            </Menu>
+          }
+          trigger={["click"]}
+        >
+          <a href="#">{text}</a>
+        </Dropdown>
+      ),
+    },
+    {
       title: "Property Address",
       dataIndex: "address",
       key: "address",
