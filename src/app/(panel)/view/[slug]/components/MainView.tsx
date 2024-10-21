@@ -73,6 +73,9 @@ const MainView: React.FC = () => {
     propertyDetails_propertySpecifications_swimPool: "",
     propertyDetails_description: "",
 
+    chain_chainName: "",
+    chain_chainId: 0,
+
     financials_token_tokenPrice: 0,
     financials_token_tokenSupply: 0,
     financials_token_tokenValue: 0,
@@ -126,6 +129,8 @@ const MainView: React.FC = () => {
             : [];
 
           setFormData({
+            chain_chainId: propertyData.chain.chainId,
+            chain_chainName: propertyData.chain.chainName,
             propertyDetails_propertyStatus_phase:
               propertyData.propertyDetails.propertyStatus.phase,
             propertyDetails_propertyStatus_status:

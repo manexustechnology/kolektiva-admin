@@ -67,6 +67,9 @@ const PropertyListingForm: React.FC = () => {
     propertyDetails_propertySpecifications_swimPool: "",
     propertyDetails_description: "",
 
+    chain_chainName: "",
+    chain_chainId: 0,
+
     financials_token_tokenPrice: 0,
     financials_token_tokenSupply: 0,
     financials_token_tokenValue: 0,
@@ -195,7 +198,9 @@ const PropertyListingForm: React.FC = () => {
           !!formData.propertyDetails_propertyDetails_propertyManager &&
           !!formData.propertyDetails_propertyDetails_furnish &&
           formData.propertyDetails_propertyDetails_propertyIssues.length > 0 &&
-          !!formData.propertyDetails_description;
+          !!formData.propertyDetails_description &&
+          !!formData.chain_chainName &&
+          !!formData.chain_chainId;
 
         allFieldsFilled =
           allFieldsFilled && formData.validEmail && formData.validMap;
@@ -255,6 +260,10 @@ const PropertyListingForm: React.FC = () => {
       const token = await generateJWTBearerForAdmin(session?.user?.email || "");
       const title = formData.propertyDetails_propertySummary_title;
       const propertyData: PropertyData = {
+        chain: {
+          chainId: formData.chain_chainId,
+          chainName: formData.chain_chainName,
+        },
         propertyDetails: {
           propertyStatus: {
             phase:

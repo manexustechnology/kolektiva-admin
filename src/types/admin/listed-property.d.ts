@@ -11,6 +11,7 @@ export interface AdminListedPropertyResponse {
   id: string;
   marketAddress: string;
   tokenAddress: string;
+  chainId: number;
   address: string;
   city: string;
   state: string;

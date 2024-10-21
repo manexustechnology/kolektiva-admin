@@ -195,10 +195,22 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
 
   const handleDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+
+    if (name === "chain_selector") {
+      // Split value into chainName and chainId
+      const [chainName, chainId] = value.split("|");
+      setFormData({
+        ...formData,
+        chain_chainName: chainName,
+        chain_chainId: Number(chainId),
+      });
+    } else {
+      // Handle other dropdowns
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -330,7 +342,6 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                   <option value="" disabled>
                     Select Property Status
                   </option>
-                  <option value="draft">Draft</option>
                   <option value="hidden">Hidden</option>
                   <option value="visible">Visible</option>
                 </select>
@@ -370,6 +381,55 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
             </div>
           </div>
         </div> */}
+      </div>
+
+      {/* Network Selector */}
+      <div className="flex flex-col items-start p-4 gap-5 w-full bg-white shadow-md rounded-lg">
+        {/* Title */}
+        <p className="text-lg font-medium text-zinc-500">Network</p>
+        {/* Divider */}
+        <div className="w-full h-px bg-zinc-200"></div>
+
+        {/* Network Selector */}
+        <div className="flex flex-col items-start p-0 gap-1.5 w-full">
+          <div className="flex flex-row items-center p-0 gap-0.75">
+            <p className="text-sm font-normal text-zinc-700">
+              Network <span className="text-zinc-400">*</span>
+            </p>
+            {formData.errmsg && formData.chain_chainName === "" && (
+              <span className="text-red-500 text-xs">Select a network</span>
+            )}
+          </div>
+          <div className="flex flex-col items-start p-0 gap-1 w-full">
+            <div className="relative w-full">
+              <select
+                name="chain_selector"
+                value={`${formData.chain_chainName}|${formData.chain_chainId}`}
+                onChange={handleDropdownChange}
+                className="w-full h-[40px] bg-[#F4F4F5] border-none rounded-full pl-4 pr-10 appearance-none"
+                disabled={isLoading}
+                style={{
+                  backgroundImage: `url(${
+                    formData.chain_chainName === "Lisk Sepolia"
+                      ? "/chain-logo/lisk-logo.svg"
+                      : formData.chain_chainName === "Base Sepolia"
+                      ? "/chain-logo/base-logo-in-blue.svg"
+                      : "none"
+                  })`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "right 0.5rem center",
+                  backgroundSize: "20px 20px",
+                }}
+              >
+                <option value="" disabled>
+                  Select Network
+                </option>
+                <option value="Lisk Sepolia|4202">Lisk Sepolia</option>
+                <option value="Base Sepolia|84532">Base Sepolia</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Issuer Details */}
