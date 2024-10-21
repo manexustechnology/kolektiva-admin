@@ -25,7 +25,7 @@ export interface FormData {
   propertyDetails_propertyDetails_occupancyStatus: string;
   propertyDetails_propertyDetails_propertyManager: string;
   propertyDetails_propertyDetails_furnish: string;
-  propertyDetails_propertyDetails_furniture: string;
+  propertyDetails_propertyDetails_furniture: string[];
   propertyDetails_propertyDetails_propertyIssues: string[];
   propertyDetails_propertySpecifications_propertyCertificate: string;
   propertyDetails_propertySpecifications_floors: number;
