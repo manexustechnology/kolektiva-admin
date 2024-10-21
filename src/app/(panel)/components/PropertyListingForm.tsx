@@ -197,7 +197,6 @@ const PropertyListingForm: React.FC = () => {
           !!formData.propertyDetails_propertyDetails_occupancyStatus &&
           !!formData.propertyDetails_propertyDetails_propertyManager &&
           !!formData.propertyDetails_propertyDetails_furnish &&
-          formData.propertyDetails_propertyDetails_propertyIssues.length > 0 &&
           !!formData.propertyDetails_description &&
           !!formData.chain_chainName &&
           !!formData.chain_chainId;
