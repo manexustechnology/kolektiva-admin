@@ -61,7 +61,7 @@ const MainView: React.FC = () => {
     propertyDetails_propertyDetails_occupancyStatus: "",
     propertyDetails_propertyDetails_propertyManager: "",
     propertyDetails_propertyDetails_furnish: "",
-    propertyDetails_propertyDetails_furniture: "",
+    propertyDetails_propertyDetails_furniture: [],
     propertyDetails_propertyDetails_propertyIssues: [],
     propertyDetails_propertySpecifications_propertyCertificate: "",
     propertyDetails_propertySpecifications_floors: 0,
