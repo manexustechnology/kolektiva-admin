@@ -21,9 +21,10 @@ const MarketPanel: React.FC<MarketPanelProps> = ({ formData }) => {
         {/* Divider */}
         <div className="w-full h-px bg-zinc-200"></div>
 
-        <p className="text-base font-medium leading-[18px] text-left">
-          {formData.markets_markets}
-        </p>
+        <div
+          className="text-sm font-medium text-zinc-500"
+          dangerouslySetInnerHTML={{ __html: formData.markets_markets }}
+        />
       </div>
     </div>
   );
