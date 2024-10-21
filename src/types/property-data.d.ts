@@ -55,6 +55,10 @@ export class PropertyData {
     };
     description: string;
   };
+  chain: {
+    chainName: string;
+    chainId: number;
+  };
   financials: {
     token: {
       tokenPrice: number;

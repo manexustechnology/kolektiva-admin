@@ -37,6 +37,9 @@ export interface FormData {
   propertyDetails_propertySpecifications_swimPool: string;
   propertyDetails_description: string;
 
+  chain_chainName: string;
+  chain_chainId: number;
+
   financials_token_tokenPrice: number;
   financials_token_tokenSupply: number;
   financials_token_tokenValue: number;
