@@ -1403,7 +1403,6 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
           <div className="flex flex-row items-center p-0 gap-0.75 w-full">
             <p className="text-sm font-normal text-zinc-700">
               Does the property have any issues?{" "}
-              <span className="text-zinc-400">*</span>
             </p>
             {formData.errmsg &&
               formData.propertyDetails_propertyDetails_propertyIssues.length ===
