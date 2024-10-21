@@ -319,7 +319,7 @@ const PropertyListingForm: React.FC = () => {
             propertyManager:
               formData.propertyDetails_propertyDetails_propertyManager,
             furnish: formData.propertyDetails_propertyDetails_furnish,
-            furniture: formData.propertyDetails_propertyDetails_furniture[0],
+            furniture: formData.propertyDetails_propertyDetails_furniture,
             propertyIssues:
               formData.propertyDetails_propertyDetails_propertyIssues,
           },
