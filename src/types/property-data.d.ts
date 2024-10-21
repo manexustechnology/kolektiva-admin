@@ -40,7 +40,7 @@ export class PropertyData {
       occupancyStatus: string;
       propertyManager: string;
       furnish: string;
-      furniture: string;
+      furniture: string[];
       propertyIssues: string[];
     };
     propertySpecifications: {

@@ -58,7 +58,7 @@ const FormPart4: React.FC<FormPart4Props> = ({ formData, setFormData }) => {
       </div>
 
       {/* Makets */}
-      <div className="flex flex-col items-start p-4 gap-5 w-full bg-white shadow-md rounded-lg md:h-[240px]">
+      <div className="flex flex-col items-start p-4 gap-5 w-full bg-white shadow-md rounded-lg md:min-h-[240px]">
         {/* Title */}
         <p className="text-lg font-medium text-zinc-500">
           Markets{" "}
