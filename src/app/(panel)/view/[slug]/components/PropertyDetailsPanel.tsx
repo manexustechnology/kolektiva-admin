@@ -706,11 +706,10 @@ const PropertyDetailsPanel: React.FC<PropertyDetailsPanelProps> = ({
         {/* Title */}
         <p className="text-lg font-medium text-zinc-500">Description</p>
         {/* Divider */}
-        <div className="w-full h-px bg-zinc-200">
-          <p className="text-base font-medium leading-[18px] text-left">
-            {formData.propertyDetails_description}
-          </p>
-        </div>
+        <div className="w-full h-px bg-zinc-200"></div>
+        <p className="text-base font-medium leading-[18px] text-left">
+          {formData.propertyDetails_description}
+        </p>
       </div>
     </div>
   );
