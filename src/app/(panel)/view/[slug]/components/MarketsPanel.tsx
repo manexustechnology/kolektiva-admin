@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 
 import { FormData } from "@/types/formData";
+import "../../../styles/quill-custom-styles.css";
 
 interface MarketPanelProps {
   formData: FormData;
@@ -22,8 +23,10 @@ const MarketPanel: React.FC<MarketPanelProps> = ({ formData }) => {
         <div className="w-full h-px bg-zinc-200"></div>
 
         <div
-          className="text-sm font-medium text-zinc-500"
-          dangerouslySetInnerHTML={{ __html: formData.markets_markets }}
+          className="quill-wrapper"
+          dangerouslySetInnerHTML={{
+            __html: formData.markets_markets,
+          }}
         />
       </div>
     </div>
