@@ -702,7 +702,7 @@ const PropertyDetailsPanel: React.FC<PropertyDetailsPanelProps> = ({
         </div>
       </div>
 
-      {/* Description */}
+      {/* Description Details*/}
       <div className="flex flex-col items-start p-4 gap-5 w-full bg-white shadow-md rounded-lg">
         {/* Title */}
         <p className="text-lg font-medium text-zinc-500">Description</p>
