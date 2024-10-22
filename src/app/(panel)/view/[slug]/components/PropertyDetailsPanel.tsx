@@ -15,7 +15,7 @@ import {
 import { Box, Button } from "@chakra-ui/react";
 import { Eye } from "@phosphor-icons/react";
 import MediaShowModal from "@/app/(panel)/list-new-property/modals/MediaShowModal";
-import "../../../styles/quill-custom-styles.css";
+import "../styles/quill-custom-styles.css";
 
 interface PropertyDetailsPanelProps {
   formData: FormData;

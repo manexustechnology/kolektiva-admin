@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 
 import { FormData } from "@/types/formData";
-import "../../../styles/quill-custom-styles.css";
+import "../styles/quill-custom-styles.css";
 
 interface MarketPanelProps {
   formData: FormData;
