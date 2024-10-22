@@ -7,7 +7,12 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
-import { CheckCircle, Trash } from "@phosphor-icons/react/dist/ssr";
+import {
+  ArrowSquareOut,
+  CheckCircle,
+  Info,
+  Trash,
+} from "@phosphor-icons/react/dist/ssr";
 import { Box, Button, Toast } from "@chakra-ui/react";
 import { Eye } from "@phosphor-icons/react";
 import MediaShowModal from "../modals/MediaShowModal";
@@ -59,24 +64,6 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
     }
   };
 
-  const validateMapLink = (link: string) => {
-    const urlRegex =
-      /^(https?:\/\/)?(www\.)?(google\.com\/maps\/|maps\.app\.goo\.gl\/).+/;
-    if (!urlRegex.test(link)) {
-      setFormData((prevData) => ({
-        ...prevData,
-        validMap: false,
-      }));
-      setErrorMap("Please paste a valid Google Maps URL.");
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        validMap: true,
-      }));
-      setErrorMap("");
-    }
-  };
-
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setFormData((prevData) => ({
@@ -84,6 +71,36 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
       propertyDetails_issuerDetails_email: value,
     }));
     validateEmail(value);
+  };
+
+  const validateMapLink = (link: string) => {
+    const urlRegex =
+      /^(https?:\/\/)?(www\.)?(google\.com\/maps\/(place|search|embed)|maps\.google\.com\/maps).+/;
+    if (!urlRegex.test(link)) {
+      setFormData((prevData) => ({
+        ...prevData,
+        validMap: false,
+      }));
+      toast.error(
+        <>
+          Please paste a valid Google Maps URL instead of a shortened URL from
+          the share link.
+        </>,
+        {
+          duration: 3000,
+        }
+      );
+
+      setErrorMap(
+        "Please paste a valid Google Maps URL instead of a shortened url from share link."
+      );
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        validMap: true,
+      }));
+      setErrorMap("");
+    }
   };
 
   const handleMapLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,6 +111,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
     }));
     validateMapLink(value);
   };
+
   const handlePhoneChange = (phone: string) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -626,10 +644,27 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
 
           {/* G Map */}
           <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
-            <div className="flex flex-row items-center p-0 gap-0.75">
+            <div className="flex flex-row items-center p-0 gap-2 relative">
               <p className="text-sm font-normal text-zinc-700">
                 Google Map Url <span className="text-zinc-400">*</span>
               </p>
+              <ArrowSquareOut
+                size={18}
+                onClick={() => {
+                  window.location.href = "https://www.google.com/maps";
+                }}
+              />
+
+              {/* Info icon with hover instructions */}
+              <div className="relative group">
+                <Info size={18} />
+                <div className="absolute hidden group-hover:flex flex-col items-start p-2 bg-gray-100 text-zinc-600 text-xs border border-gray-300 rounded-md shadow-lg top-full left-0 z-10 w-64">
+                  Please copy the URL from the Google Maps address bar in your
+                  browser instead of App, not the shortened link found in the
+                  share option.
+                </div>
+              </div>
+
               {formData.errmsg &&
                 formData.propertyDetails_propertySummary_googleMapUrl ===
                   "" && (
