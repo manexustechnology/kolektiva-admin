@@ -15,6 +15,7 @@ import {
 import { Box, Button } from "@chakra-ui/react";
 import { Eye } from "@phosphor-icons/react";
 import MediaShowModal from "@/app/(panel)/list-new-property/modals/MediaShowModal";
+import "../styles/quill-custom-styles.css";
 
 interface PropertyDetailsPanelProps {
   formData: FormData;
@@ -701,14 +702,14 @@ const PropertyDetailsPanel: React.FC<PropertyDetailsPanelProps> = ({
         </div>
       </div>
 
-      {/* Description */}
+      {/* Description Details*/}
       <div className="flex flex-col items-start p-4 gap-5 w-full bg-white shadow-md rounded-lg">
         {/* Title */}
         <p className="text-lg font-medium text-zinc-500">Description</p>
         {/* Divider */}
-        <div className="w-full h-px bg-zinc-200" />
+        <div className="w-full h-px bg-zinc-200"></div>
         <div
-          className="text-sm font-medium text-zinc-500"
+          className="quill-wrapper"
           dangerouslySetInnerHTML={{
             __html: formData.propertyDetails_description,
           }}
