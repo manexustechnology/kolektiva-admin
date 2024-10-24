@@ -559,7 +559,7 @@ const ListedPropertyPage: React.FC = () => {
                 fontSize="md"
                 zIndex={10}
               >
-                Initial Offering
+                InitialOffering
               </Box>
             )}
             {record.phase === "settlement" && (
