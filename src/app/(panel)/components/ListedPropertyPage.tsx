@@ -15,6 +15,7 @@ import {
 import { IMarketFilter } from "@/types/filter";
 import {
   CaretDown,
+  CaretUp,
   Funnel,
   MagnifyingGlass,
   PencilSimpleLine,
@@ -37,6 +38,7 @@ import {
 } from "@/types/admin/listed-property";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
+import ChangePhaseConfirmModal from "../modals/ChangePhaseConfirmModal";
 
 interface TableParams {
   pagination?: TablePaginationConfig;
@@ -48,6 +50,10 @@ interface TableParams {
 const ListedPropertyPage: React.FC = () => {
   const { data: session } = useSession();
   const router = useRouter();
+  const [phaseChangeConfirmModalOpen, setPhaseChangeConfirmModalOpen] =
+    useState<boolean>(false);
+  const [recordId, setRecordId] = useState<string>("");
+  const [newPhase, setNewPhase] = useState<string>("");
 
   // State to control the current page
   const [domLoaded, setDomLoaded] = useState(false);
@@ -72,7 +78,17 @@ const ListedPropertyPage: React.FC = () => {
     onFilterReset: () => void;
     filters: IMarketFilter;
   }
-
+  const handlePhaseChange = (record: any) => {
+    setRecordId(record.id);
+    if (record.phase === "upcoming") {
+      setNewPhase("initial-offering");
+    } else if (record.phase === "initial-offering") {
+      setNewPhase("settlement");
+    } else if (record.phase === "settlement") {
+      setNewPhase("aftermarket");
+    }
+    setPhaseChangeConfirmModalOpen(true);
+  };
   const handleMenuClick = async (key: string, record: any) => {
     const token = await generateJWTBearerForAdmin(session?.user?.email || "");
 
@@ -138,7 +154,7 @@ const ListedPropertyPage: React.FC = () => {
       } catch (error) {
         // Handle the error if necessary
       }
-    } else if (key === "change") {
+    } else if (key === "changeStatus") {
       if (record.status === "visible") {
         try {
           // Change status
@@ -196,6 +212,8 @@ const ListedPropertyPage: React.FC = () => {
       } else {
         toast.error("Draft status can't be updated");
       }
+    } else if (key === "phaseChange") {
+      handlePhaseChange(record);
     }
   };
 
@@ -230,51 +248,94 @@ const ListedPropertyPage: React.FC = () => {
           }
           trigger={["click"]}
         >
-          <a href="#">{dayjs(text).format("YYYY-MM-DD HH:mm")} WIB</a>
+          <span className="flex cursor-pointer">
+            {dayjs(text).format("YYYY-MM-DD HH:mm")} WIB
+          </span>
         </Dropdown>
       ),
     },
     {
-      title: "Status",
+      title: "Visiblity",
       dataIndex: "status",
       key: "status",
       render: (text: string, record: any) => (
-        <Dropdown
-          overlay={
-            <Menu
-              onClick={({ key }) => handleMenuClick(key, record)}
-              style={{ width: "140px" }}
-            >
-              <Menu.Item key="view">
-                <div className="flex flex-row items-center">
-                  <Eye weight="fill" style={{ marginRight: "8px" }} />
-                  View
-                </div>
-              </Menu.Item>
-              <Menu.Item key="edit">
-                <div className="flex flex-row items-center">
-                  <PencilSimpleLine
-                    weight="fill"
-                    style={{ marginRight: "8px" }}
-                  />
-                  Edit
-                </div>
-              </Menu.Item>
-              <Menu.Item key="change">
-                <div className="flex flex-row items-center">
-                  <PencilSimpleLine
-                    weight="fill"
-                    style={{ marginRight: "8px" }}
-                  />
-                  Change Status
-                </div>
-              </Menu.Item>
-            </Menu>
-          }
-          trigger={["click"]}
-        >
-          <a href="#">{text}</a>
-        </Dropdown>
+        <div style={{ position: "relative" }}>
+          <Dropdown
+            overlay={
+              <Menu onClick={({ key }) => handleMenuClick(key, record)}>
+                {text === "hidden" && (
+                  <Menu.Item key="changeStatus">
+                    <div className="flex flex-row items-center">
+                      <PencilSimpleLine
+                        weight="fill"
+                        style={{ marginRight: "8px" }}
+                      />
+                      Change Status Visible
+                    </div>
+                  </Menu.Item>
+                )}
+                {text === "visible" && (
+                  <Menu.Item key="changeStatus">
+                    <div className="flex flex-row items-center">
+                      <PencilSimpleLine
+                        weight="fill"
+                        style={{ marginRight: "8px" }}
+                      />
+                      Change Status Hidden
+                    </div>
+                  </Menu.Item>
+                )}
+              </Menu>
+            }
+            trigger={["click"]}
+          >
+            <span className="flex cursor-pointer">
+              {text === "hidden" && (
+                <Box
+                  backgroundColor="#F4F4F5"
+                  color="#3F3F46"
+                  padding="2px 8px"
+                  borderWidth="1px"
+                  borderRadius="full"
+                  borderColor="#E4E4E7"
+                  fontSize="md"
+                  zIndex={10}
+                >
+                  Hidden
+                </Box>
+              )}
+              {text === "visible" && (
+                <Box
+                  backgroundColor="#CCFBF1"
+                  color="#0F766E"
+                  padding="2px 8px"
+                  borderWidth="1px"
+                  borderRadius="full"
+                  borderColor="#99F6E4"
+                  fontSize="md"
+                  zIndex={10}
+                >
+                  Visible
+                </Box>
+              )}
+              {text === "draft" && (
+                <Box
+                  backgroundColor="#F4F4F5"
+                  opacity={0.4}
+                  color="#3F3F46"
+                  padding="2px 8px"
+                  borderWidth="1px"
+                  borderRadius="full"
+                  borderColor="#E4E4E7"
+                  fontSize="md"
+                  zIndex={10}
+                >
+                  Hidden
+                </Box>
+              )}
+            </span>
+          </Dropdown>
+        </div>
       ),
     },
     {
@@ -307,7 +368,7 @@ const ListedPropertyPage: React.FC = () => {
           }
           trigger={["click"]}
         >
-          <a href="#">{text}</a>
+          <span className="flex cursor-pointer">{text}</span>
         </Dropdown>
       ),
     },
@@ -341,7 +402,7 @@ const ListedPropertyPage: React.FC = () => {
           }
           trigger={["click"]}
         >
-          <a href="#">{text}</a>
+          <span className="flex cursor-pointer">{text}</span>
         </Dropdown>
       ),
     },
@@ -375,7 +436,7 @@ const ListedPropertyPage: React.FC = () => {
           }
           trigger={["click"]}
         >
-          <a href="#">{text}</a>
+          <span className="flex cursor-pointer">{text}</span>
         </Dropdown>
       ),
     },
@@ -409,7 +470,7 @@ const ListedPropertyPage: React.FC = () => {
           }
           trigger={["click"]}
         >
-          <a href="#">{text}</a>
+          <span className="flex cursor-pointer">{text}</span>
         </Dropdown>
       ),
     },
@@ -420,37 +481,137 @@ const ListedPropertyPage: React.FC = () => {
       render: (text: string, record: any) => (
         <Dropdown
           overlay={
-            <Menu
-              onClick={({ key }) => handleMenuClick(key, record)}
-              style={{ width: "140px" }}
-            >
-              <Menu.Item key="view">
-                <div className="flex flex-row items-center">
-                  <Eye weight="fill" style={{ marginRight: "8px" }} />
-                  View
-                </div>
-              </Menu.Item>
-              <Menu.Item key="edit">
-                <div className="flex flex-row items-center">
-                  <PencilSimpleLine
-                    weight="fill"
-                    style={{ marginRight: "8px" }}
-                  />
-                  Edit
-                </div>
-              </Menu.Item>
+            <Menu onClick={({ key }) => handleMenuClick(key, record)}>
+              {record.phase === "upcoming" && (
+                <Menu.Item key="phaseChange">
+                  <div className="flex flex-row items-center">
+                    <PencilSimpleLine
+                      weight="fill"
+                      style={{ marginRight: "8px" }}
+                    />
+                    Change Phase to Initial Offering
+                  </div>
+                </Menu.Item>
+              )}
+              {record.phase === "initial-offering" && (
+                <Menu.Item key="phaseChange">
+                  <div className="flex flex-row items-center">
+                    <PencilSimpleLine
+                      weight="fill"
+                      style={{ marginRight: "8px" }}
+                    />
+                    Change Phase to Settlement
+                  </div>
+                </Menu.Item>
+              )}
+              {record.phase === "settlement" && (
+                <Menu.Item key="phaseChange">
+                  <div className="flex flex-row items-center">
+                    <PencilSimpleLine
+                      weight="fill"
+                      style={{ marginRight: "8px" }}
+                    />
+                    Change Phase to Aftermarket
+                  </div>
+                </Menu.Item>
+              )}
             </Menu>
           }
           trigger={["click"]}
         >
-          <a href="#">
-            {record.isUpcoming
-              ? "Upcoming"
-              : record.isAftermarket
-              ? "Aftermarket"
-              : "Initial Offering"}
-          </a>
+          <span className="flex cursor-pointer">
+            {record.phase === "draft" && (
+              <Box
+                backgroundColor="#F4F4F5"
+                color="#3F3F46"
+                padding="2px 8px"
+                borderWidth="1px"
+                borderRadius="full"
+                borderColor="#E4E4E7"
+                fontSize="md"
+                zIndex={10}
+              >
+                Draft
+              </Box>
+            )}
+            {record.phase === "upcoming" && (
+              <Box
+                backgroundColor="#FEF3C7"
+                color="#B45309"
+                padding="2px 8px"
+                borderWidth="1px"
+                borderRadius="full"
+                borderColor="#FDE68A"
+                fontSize="md"
+                zIndex={10}
+              >
+                Upcoming
+              </Box>
+            )}
+            {record.phase === "initial-offering" && (
+              <Box
+                backgroundColor="#ECFCCB"
+                color="#4D7C0F"
+                padding="2px 8px"
+                borderWidth="1px"
+                borderRadius="full"
+                borderColor="#D9F99D"
+                fontSize="md"
+                zIndex={10}
+              >
+                Initial Offering
+              </Box>
+            )}
+            {record.phase === "settlement" && (
+              <Box
+                backgroundColor="#EDE9FE"
+                color="#6D28D9"
+                padding="2px 8px"
+                borderWidth="1px"
+                borderRadius="full"
+                borderColor="#DDD6FE"
+                fontSize="md"
+                zIndex={10}
+              >
+                Settlement
+              </Box>
+            )}
+
+            {record.phase === "aftermarket" && (
+              <Box
+                backgroundColor="#CCFBF1"
+                color="#0F766E"
+                padding="2px 8px"
+                borderWidth="1px"
+                borderRadius="full"
+                borderColor="#99F6E4"
+                fontSize="md"
+                zIndex={10}
+              >
+                Aftermarket
+              </Box>
+            )}
+          </span>
         </Dropdown>
+      ),
+    },
+    {
+      title: "Actions",
+      dataIndex: "",
+      key: "actions",
+      render: (_: any, record: { id: string }) => (
+        <div className="flex gap-2">
+          <Eye
+            size={24}
+            className="cursor-pointer"
+            onClick={() => router.push(`/view/${record.id}`)}
+          />
+          <PencilSimpleLine
+            size={24}
+            className="cursor-pointer"
+            onClick={() => router.push(`/edit/${record.id}`)}
+          />
+        </div>
       ),
     },
   ];
@@ -538,6 +699,104 @@ const ListedPropertyPage: React.FC = () => {
       sortField: Array.isArray(sorter) ? undefined : sorter.field,
     });
   };
+  const testData = [
+    {
+      id: "1",
+      date: "2024-10-01",
+      status: "visible",
+      tokenName: "Luxury Apartment",
+      address: "123 Main St, Springfield",
+      state: "IL",
+      propertyType: "Apartment",
+      phase: "initial-offering",
+      isUpcoming: false,
+      isAftermarket: false,
+    },
+    {
+      id: "2",
+      date: "2024-09-15",
+      status: "draft",
+      tokenName: "Cozy Cottage",
+      address: "456 Oak Ave, Riverside",
+      state: "CA",
+      propertyType: "Cottage",
+      phase: "draft",
+      isUpcoming: false,
+      isAftermarket: true,
+    },
+    {
+      id: "3",
+      date: "2024-08-20",
+      status: "hidden",
+      tokenName: "Modern Villa",
+      address: "789 Maple Rd, Greenfield",
+      state: "NY",
+      propertyType: "Villa",
+      phase: "upcoming",
+      isUpcoming: true,
+      isAftermarket: false,
+    },
+    {
+      id: "4",
+      date: "2024-07-10",
+      status: "visible",
+      tokenName: "Urban Loft",
+      address: "321 Pine St, Metropolis",
+      state: "TX",
+      propertyType: "Loft",
+      phase: "aftermarket",
+      isUpcoming: false,
+      isAftermarket: true,
+    },
+    {
+      id: "5",
+      date: "2024-06-05",
+      status: "draft",
+      tokenName: "Beach House",
+      address: "654 Sea Dr, Oceanside",
+      state: "FL",
+      propertyType: "House",
+      phase: "draft",
+      isUpcoming: false,
+      isAftermarket: false,
+    },
+    {
+      id: "6",
+      date: "2024-05-12",
+      status: "visible",
+      tokenName: "Ranch Style Home",
+      address: "987 Ranch Rd, Hilltop",
+      state: "NV",
+      propertyType: "House",
+      phase: "settlement",
+      isUpcoming: false,
+      isAftermarket: true,
+    },
+    {
+      id: "7",
+      date: "2024-04-15",
+      status: "hidden",
+      tokenName: "Downtown Condo",
+      address: "159 Central Blvd, Capital City",
+      state: "WA",
+      propertyType: "Condo",
+      phase: "upcoming",
+      isUpcoming: true,
+      isAftermarket: false,
+    },
+    {
+      id: "8",
+      date: "2024-03-30",
+      status: "visible",
+      tokenName: "Suburban Bungalow",
+      address: "753 North St, Suburbia",
+      state: "OH",
+      propertyType: "Bungalow",
+      phase: "aftermarket",
+      isUpcoming: false,
+      isAftermarket: true,
+    },
+  ];
 
   if (!domLoaded || !session) return <></>;
 
@@ -616,15 +875,21 @@ const ListedPropertyPage: React.FC = () => {
             </div>
           </div>
           <Table
-            className="overflow-x-auto "
+            className="overflow-x-auto"
             rowKey={(record) => record.id || ""}
-            dataSource={dataSource}
+            dataSource={testData}
             columns={columns}
             pagination={tableParams.pagination}
             loading={loading}
             onChange={handleTableChange}
           />
         </div>
+        <ChangePhaseConfirmModal
+          recordId={recordId}
+          newPhase={newPhase}
+          isOpen={phaseChangeConfirmModalOpen}
+          onClose={() => setPhaseChangeConfirmModalOpen(false)}
+        />
       </PanelLayout>
     </div>
   );
