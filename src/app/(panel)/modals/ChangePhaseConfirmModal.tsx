@@ -59,11 +59,19 @@ const ChangePhaseConfirmModal: React.FC<ChangePhaseConfirmModalProps> = ({
       if (response.status === 200 && response.data) {
         console.log("Submission successful", response);
         setIsLoading(false);
+        onClose();
         toast.success("Phase changed succesfully.");
       } else {
         console.log("Submission failed", response);
+        setIsLoading(false);
+        onClose();
+        toast.success("Phase change Failed.");
       }
-    } catch (error) {}
+    } catch (error) {
+      setIsLoading(false);
+      onClose();
+      toast.error("Phase change Failed.");
+    }
   };
 
   return (
