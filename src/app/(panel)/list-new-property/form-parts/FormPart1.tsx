@@ -332,16 +332,16 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
       </div>
 
       {/* Property Status */}
-      <div className="flex flex-col items-start p-4 gap-5 w-full bg-white shadow-md rounded-lg">
-        {/* Title */}
-        <p className="text-lg font-medium text-zinc-500">Property Status</p>
-        {/* Divider */}
-        <div className="w-full h-px bg-zinc-200"></div>
+      {/* <div className="flex flex-col items-start p-4 gap-5 w-full bg-white shadow-md rounded-lg"> */}
+      {/* Title */}
+      {/* <p className="text-lg font-medium text-zinc-500">Property Status</p> */}
+      {/* Divider */}
+      {/* <div className="w-full h-px bg-zinc-200"></div> */}
 
-        {/* Phase/Status */}
-        <div className="flex flex-col md:flex-row items-start p-0 gap-1.5 w-full">
-          {/* Phase */}
-          <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
+      {/* Phase/Status */}
+      {/* <div className="flex flex-col md:flex-row items-start p-0 gap-1.5 w-full"> */}
+      {/* Phase */}
+      {/* <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
             <div className="flex flex-row items-center p-0 gap-0.75">
               <p className="text-sm font-normal text-zinc-700">
                 Phase <span className="text-zinc-400">*</span>
@@ -368,10 +368,10 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                 </select>
               </div>
             </div>
-          </div>
+          </div> */}
 
-          {/* Status */}
-          <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
+      {/* Status */}
+      {/* <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
             <div className="flex flex-row items-center p-0 gap-0.75">
               <p className="text-sm font-normal text-zinc-700">
                 Status
@@ -399,11 +399,11 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                 </select>
               </div>
             </div>
-          </div>
-        </div>
+          </div> */}
+      {/* </div> */}
 
-        {/* Rental Status */}
-        {/* <div className="flex flex-col md:flex-row items-start p-0 gap-1.5 w-full">
+      {/* Rental Status */}
+      {/* <div className="flex flex-col md:flex-row items-start p-0 gap-1.5 w-full">
           <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
             <div className="flex flex-row items-center p-0 gap-0.75">
               <p className="text-sm font-normal text-zinc-700">
@@ -432,8 +432,8 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
               </div>
             </div>
           </div>
-        </div> */}
-      </div>
+        </div> 
+      </div>*/}
 
       {/* Network Selector */}
       <div className="flex flex-col items-start p-4 gap-5 w-full bg-white shadow-md rounded-lg">
@@ -494,7 +494,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
         {/* Issued By/Name */}
         <div className="flex flex-col md:flex-row items-start p-0 gap-1.5 w-full">
           {/* Issued By */}
-          <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
+          {/* <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
             <div className="flex flex-row items-center p-0 gap-0.75">
               <p className="text-sm font-normal text-zinc-700">
                 Issued By <span className="text-zinc-400">*</span>
@@ -521,10 +521,10 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                 </select>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Name */}
-          <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-1/2">
+          <div className="flex flex-col items-start p-0 gap-1.5 w-full md:w-full">
             <div className="flex flex-row items-center p-0 gap-0.75">
               <p className="text-sm font-normal text-zinc-700">
                 Name <span className="text-zinc-400">*</span>
@@ -649,9 +649,10 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                 Google Map Url <span className="text-zinc-400">*</span>
               </p>
               <ArrowSquareOut
+                className="cursor-pointer"
                 size={18}
                 onClick={() => {
-                  window.location.href = "https://www.google.com/maps";
+                  window.open("https://www.google.com/maps", "_blank");
                 }}
               />
 
@@ -659,8 +660,9 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
               <div className="relative group">
                 <Info size={18} />
                 <div className="absolute hidden group-hover:flex flex-col items-start p-2 bg-gray-100 text-zinc-600 text-xs border border-gray-300 rounded-md shadow-lg top-full left-0 z-10 w-64">
-                  Please copy the URL from the Google Maps address bar in your browser instead of App, not the
-                  shortened link found in the share option.
+                  Please copy the URL from the Google Maps address bar in your
+                  browser instead of App, not the shortened link found in the
+                  share option.
                 </div>
               </div>
 
@@ -1438,13 +1440,13 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
             <p className="text-sm font-normal text-zinc-700">
               Does the property have any issues?{" "}
             </p>
-            {formData.errmsg &&
+            {/* {formData.errmsg &&
               formData.propertyDetails_propertyDetails_propertyIssues.length ===
                 0 && (
                 <span className="text-red-500 text-xs">
                   Select at least one
                 </span>
-              )}
+              )} */}
           </div>
 
           {/* Checkboxes */}
@@ -1497,7 +1499,7 @@ const FormPart1: React.FC<FormPart1Props> = ({ formData, setFormData }) => {
                   (tag, index) => (
                     <span
                       key={index}
-                      className="bg-teal-100 text-teal-600 px-2 py-1 rounded-[3px] text-md flex items-center gap-1"
+                      className="bg-teal-100 text-teal-600 px-2 py-1 rounded-[10px] text-md flex items-center gap-1"
                     >
                       {tag}
                       <button
