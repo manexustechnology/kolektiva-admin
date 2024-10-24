@@ -877,7 +877,7 @@ const ListedPropertyPage: React.FC = () => {
           <Table
             className="overflow-x-auto"
             rowKey={(record) => record.id || ""}
-            dataSource={testData}
+            dataSource={dataSource}
             columns={columns}
             pagination={tableParams.pagination}
             loading={loading}
