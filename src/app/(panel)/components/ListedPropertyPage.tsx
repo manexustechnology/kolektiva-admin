@@ -15,6 +15,7 @@ import {
 import { IMarketFilter } from "@/types/filter";
 import {
   CaretDown,
+  CaretUp,
   Funnel,
   MagnifyingGlass,
   PencilSimpleLine,
@@ -37,6 +38,7 @@ import {
 } from "@/types/admin/listed-property";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
+import ChangePhaseConfirmModal from "../modals/ChangePhaseConfirmModal";
 
 interface TableParams {
   pagination?: TablePaginationConfig;
@@ -48,6 +50,10 @@ interface TableParams {
 const ListedPropertyPage: React.FC = () => {
   const { data: session } = useSession();
   const router = useRouter();
+  const [phaseChangeConfirmModalOpen, setPhaseChangeConfirmModalOpen] =
+    useState<boolean>(false);
+  const [recordId, setRecordId] = useState<string>("");
+  const [newPhase, setNewPhase] = useState<string>("");
 
   // State to control the current page
   const [domLoaded, setDomLoaded] = useState(false);
@@ -72,7 +78,17 @@ const ListedPropertyPage: React.FC = () => {
     onFilterReset: () => void;
     filters: IMarketFilter;
   }
-
+  const handlePhaseChange = (record: any) => {
+    setRecordId(record.id);
+    if (record.phase === "upcoming") {
+      setNewPhase("initial-offering");
+    } else if (record.phase === "initial-offering") {
+      setNewPhase("settlement");
+    } else if (record.phase === "settlement") {
+      setNewPhase("aftermarket");
+    }
+    setPhaseChangeConfirmModalOpen(true);
+  };
   const handleMenuClick = async (key: string, record: any) => {
     const token = await generateJWTBearerForAdmin(session?.user?.email || "");
 
@@ -196,6 +212,8 @@ const ListedPropertyPage: React.FC = () => {
       } else {
         toast.error("Draft status can't be updated");
       }
+    } else if (key === "phaseChange") {
+      handlePhaseChange(record);
     }
   };
 
@@ -464,7 +482,7 @@ const ListedPropertyPage: React.FC = () => {
         <Dropdown
           overlay={
             <Menu onClick={({ key }) => handleMenuClick(key, record)}>
-              {record.isUpcoming && (
+              {record.phase === "upcoming" && (
                 <Menu.Item key="phaseChange">
                   <div className="flex flex-row items-center">
                     <PencilSimpleLine
@@ -475,7 +493,18 @@ const ListedPropertyPage: React.FC = () => {
                   </div>
                 </Menu.Item>
               )}
-              {!record.isAftermarket && !record.isUpcoming && (
+              {record.phase === "initial-offering" && (
+                <Menu.Item key="phaseChange">
+                  <div className="flex flex-row items-center">
+                    <PencilSimpleLine
+                      weight="fill"
+                      style={{ marginRight: "8px" }}
+                    />
+                    Change Phase to Settlement
+                  </div>
+                </Menu.Item>
+              )}
+              {record.phase === "settlement" && (
                 <Menu.Item key="phaseChange">
                   <div className="flex flex-row items-center">
                     <PencilSimpleLine
@@ -491,7 +520,21 @@ const ListedPropertyPage: React.FC = () => {
           trigger={["click"]}
         >
           <span className="flex cursor-pointer">
-            {record.isUpcoming ? (
+            {record.phase === "draft" && (
+              <Box
+                backgroundColor="#F4F4F5"
+                color="#3F3F46"
+                padding="2px 8px"
+                borderWidth="1px"
+                borderRadius="full"
+                borderColor="#E4E4E7"
+                fontSize="md"
+                zIndex={10}
+              >
+                Draft
+              </Box>
+            )}
+            {record.phase === "upcoming" && (
               <Box
                 backgroundColor="#FEF3C7"
                 color="#B45309"
@@ -504,20 +547,8 @@ const ListedPropertyPage: React.FC = () => {
               >
                 Upcoming
               </Box>
-            ) : record.isAftermarket ? (
-              <Box
-                backgroundColor="#CCFBF1"
-                color="#0F766E"
-                padding="2px 8px"
-                borderWidth="1px"
-                borderRadius="full"
-                borderColor="#99F6E4"
-                fontSize="md"
-                zIndex={10}
-              >
-                Aftermarket
-              </Box>
-            ) : (
+            )}
+            {record.phase === "initial-offering" && (
               <Box
                 backgroundColor="#ECFCCB"
                 color="#4D7C0F"
@@ -529,6 +560,35 @@ const ListedPropertyPage: React.FC = () => {
                 zIndex={10}
               >
                 Initial Offering
+              </Box>
+            )}
+            {record.phase === "settlement" && (
+              <Box
+                backgroundColor="#EDE9FE"
+                color="#6D28D9"
+                padding="2px 8px"
+                borderWidth="1px"
+                borderRadius="full"
+                borderColor="#DDD6FE"
+                fontSize="md"
+                zIndex={10}
+              >
+                Settlement
+              </Box>
+            )}
+
+            {record.phase === "aftermarket" && (
+              <Box
+                backgroundColor="#CCFBF1"
+                color="#0F766E"
+                padding="2px 8px"
+                borderWidth="1px"
+                borderRadius="full"
+                borderColor="#99F6E4"
+                fontSize="md"
+                zIndex={10}
+              >
+                Aftermarket
               </Box>
             )}
           </span>
@@ -648,7 +708,7 @@ const ListedPropertyPage: React.FC = () => {
       address: "123 Main St, Springfield",
       state: "IL",
       propertyType: "Apartment",
-      phase: "initial offering", // Adjusted based on logic
+      phase: "initial-offering",
       isUpcoming: false,
       isAftermarket: false,
     },
@@ -817,13 +877,19 @@ const ListedPropertyPage: React.FC = () => {
           <Table
             className="overflow-x-auto"
             rowKey={(record) => record.id || ""}
-            dataSource={dataSource}
+            dataSource={testData}
             columns={columns}
             pagination={tableParams.pagination}
             loading={loading}
             onChange={handleTableChange}
           />
         </div>
+        <ChangePhaseConfirmModal
+          recordId={recordId}
+          newPhase={newPhase}
+          isOpen={phaseChangeConfirmModalOpen}
+          onClose={() => setPhaseChangeConfirmModalOpen(false)}
+        />
       </PanelLayout>
     </div>
   );
